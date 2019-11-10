@@ -29,9 +29,9 @@ Idx Name          Size      VMA       LMA       File off  Algn
                   CONTENTS, READONLY, DEBUGGING
  12 .debug_line   0002a3ff  00000000  00000000  000ec483  2**0
                   CONTENTS, READONLY, DEBUGGING
- 13 .debug_str    000a08b4  00000000  00000000  00116882  2**0
+ 13 .debug_str    000a089b  00000000  00000000  00116882  2**0
                   CONTENTS, READONLY, DEBUGGING
- 14 .debug_frame  00004f98  00000000  00000000  001b7138  2**2
+ 14 .debug_frame  00004f98  00000000  00000000  001b7120  2**2
                   CONTENTS, READONLY, DEBUGGING
 
 Disassembly of section .text:
@@ -37430,8 +37430,8 @@ __STATIC_INLINE uint32_t SysTick_Config(uint32_t ticks)
    18e0c:	6420 6972 6576 2072 6576 2072 203a 7525      driver ver : %u
    18e1c:	252e 2e75 7525 000a 7244 7669 7265 7620     .%u.%u..Driver v
    18e2c:	7265 203a 7525 252e 2e75 7525 000a 0000     er: %u.%u.%u....
-   18e3c:	3631 333a 3a37 3833 0000 0000 6f4e 2076     16:37:38....Nov 
-   18e4c:	3820 3220 3130 0039 7244 7669 7265 6220      8 2019.Driver b
+   18e3c:	3331 333a 3a34 3432 0000 0000 6f4e 2076     13:34:24....Nov 
+   18e4c:	3031 3220 3130 0039 7244 7669 7265 6220     10 2019.Driver b
    18e5c:	6975 746c 6120 2074 7325 2509 0a73 0000     uilt at %s.%s...
    18e6c:	694d 6d73 7461 6863 4620 7269 616d 7277     Mismatch Firmawr
    18e7c:	2065 6556 7372 6f69 006e 0000               e Version...
@@ -37794,8 +37794,8 @@ __STATIC_INLINE uint32_t SysTick_Config(uint32_t ticks)
    1a130:	6564 2072 7865 6d61 6c70 2065 2d2d 0a0d     der example --..
    1a140:	2d2d 5320 4d41 3257 5f35 5058 414c 4e49     -- SAMW25_XPLAIN
    1a150:	4445 505f 4f52 2d20 0d2d 2d0a 202d 6f43     ED_PRO --..-- Co
-   1a160:	706d 6c69 6465 203a 6f4e 2076 3820 3220     mpiled: Nov  8 2
-   1a170:	3130 2039 3631 333a 3a37 3834 2d20 0d2d     019 16:37:48 --.
+   1a160:	706d 6c69 6465 203a 6f4e 2076 3031 3220     mpiled: Nov 10 2
+   1a170:	3130 2039 3331 333a 3a34 3932 2d20 0d2d     019 13:34:29 --.
    1a180:	0000 0000 0a0d 6854 7369 6520 6178 706d     ......This examp
    1a190:	656c 7220 7165 6975 6572 2073 6874 2065     le requires the 
    1a1a0:	5041 7420 206f 6168 6576 6920 746e 7265     AP to have inter

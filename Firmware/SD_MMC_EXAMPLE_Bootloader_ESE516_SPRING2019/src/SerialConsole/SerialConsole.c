@@ -166,7 +166,7 @@ return currentDebugLevel;
 *****************************************************************************/
 void setLogLevel(enum eDebugLogLevels debugLevel)
 {
-currentDebugLevel = debugLevel;
+	currentDebugLevel = debugLevel;
 }
 
 
@@ -177,7 +177,17 @@ currentDebugLevel = debugLevel;
 *****************************************************************************/
 void LogMessage(enum eDebugLogLevels level, const char *format, ...)
 {
+		char buffer[80];
+		if (level>=currentDebugLevel)
+		{
+			va_list aptr;
+			int ret;
 
+			va_start(aptr, format);
+			vsprintf(buffer, format, aptr);
+			va_end(aptr);
+			SerialConsoleWriteString(buffer);
+		}	
 
 };
 

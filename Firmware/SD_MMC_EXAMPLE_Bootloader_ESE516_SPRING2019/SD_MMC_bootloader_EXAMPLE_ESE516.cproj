@@ -32,14 +32,14 @@
       <framework-data>
         <options>
           <option id="common.boards" value="Add" config="" content-id="Atmel.ASF" />
+          <option id="common.services.crc32" value="Add" config="" content-id="Atmel.ASF" />
           <option id="common2.components.memory.sd_mmc" value="Add" config="spi" content-id="Atmel.ASF" />
+          <option id="common2.services.delay" value="Add" config="systick" content-id="Atmel.ASF" />
+          <option id="sam0.drivers.nvm" value="Add" config="" content-id="Atmel.ASF" />
           <option id="sam0.drivers.port" value="Add" config="" content-id="Atmel.ASF" />
           <option id="sam0.utils.stdio.stdio_serial" value="Add" config="" content-id="Atmel.ASF" />
           <option id="common.services.fs.fatfs" value="Add" config="" content-id="Atmel.ASF" />
           <option id="sam0.drivers.dsu_crc32" value="Add" config="" content-id="Atmel.ASF" />
-          <option id="common.services.crc32" value="Add" config="" content-id="Atmel.ASF" />
-          <option id="common2.services.delay" value="Add" config="systick" content-id="Atmel.ASF" />
-          <option id="sam0.drivers.nvm" value="Add" config="" content-id="Atmel.ASF" />
           <option id="common.utils" value="Add" config="" content-id="Atmel.ASF" />
           <option id="common2.components.memory.sd_mmc.example2" value="Add" config="" content-id="Atmel.ASF" />
           <option id="sam0.utils.cmsis.samd21.source.template" value="Add" config="" content-id="Atmel.ASF" />
@@ -344,12 +344,12 @@
           <file path="src/ASF/sam0/drivers/nvm/nvm.c" framework="" version="3.40.0" source="sam0\drivers\nvm\nvm.c" changed="False" content-id="Atmel.ASF" />
           <file path="src/ASF/sam0/drivers/nvm/quick_start_basic/qs_nvm_basic.h" framework="" version="3.40.0" source="sam0\drivers\nvm\quick_start_basic\qs_nvm_basic.h" changed="False" content-id="Atmel.ASF" />
           <file path="src/ASF/sam0/drivers/nvm/nvm.h" framework="" version="3.40.0" source="sam0\drivers\nvm\nvm.h" changed="False" content-id="Atmel.ASF" />
-          <file path="src/ASF/sam0/drivers/pac/pac.h" framework="" version="3.40.0" source="sam0\drivers\pac\pac.h" changed="False" content-id="Atmel.ASF" />
           <file path="src/ASF/common2/services/delay/sam0/systick_counter.c" framework="" version="3.40.0" source="common2\services\delay\sam0\systick_counter.c" changed="False" content-id="Atmel.ASF" />
           <file path="src/ASF/common2/services/delay/sam0/systick_counter.h" framework="" version="3.40.0" source="common2\services\delay\sam0\systick_counter.h" changed="False" content-id="Atmel.ASF" />
-          <file path="src/ASF/sam0/drivers/pac/pac_sam_d_r_h/pac.c" framework="" version="3.40.0" source="sam0\drivers\pac\pac_sam_d_r_h\pac.c" changed="False" content-id="Atmel.ASF" />
           <file path="src/ASF/common/services/crc32/crc32.c" framework="" version="3.40.0" source="common\services\crc32\crc32.c" changed="False" content-id="Atmel.ASF" />
           <file path="src/ASF/common/services/crc32/crc32.h" framework="" version="3.40.0" source="common\services\crc32\crc32.h" changed="False" content-id="Atmel.ASF" />
+          <file path="src/ASF/sam0/drivers/pac/pac.h" framework="" version="3.40.0" source="sam0\drivers\pac\pac.h" changed="False" content-id="Atmel.ASF" />
+          <file path="src/ASF/sam0/drivers/pac/pac_sam_d_r_h/pac.c" framework="" version="3.40.0" source="sam0\drivers\pac\pac_sam_d_r_h\pac.c" changed="False" content-id="Atmel.ASF" />
         </files>
         <documentation help="http://asf.atmel.com/docs/3.40.0/common2.components.memory.sd_mmc.example2.samd21_xplained_pro/html/index.html" />
         <offline-documentation help="" />
@@ -438,9 +438,9 @@
       <Value>../src</Value>
       <Value>../src/config</Value>
       <Value>../src/ASF/common/services/crc32</Value>
+      <Value>../src/ASF/sam0/drivers/nvm</Value>
       <Value>../src/ASF/sam0/drivers/dsu</Value>
       <Value>../src/ASF/sam0/drivers/dsu/crc32</Value>
-      <Value>../src/ASF/sam0/drivers/nvm</Value>
       <Value>../src/ASF/sam0/drivers/pac</Value>
       <Value>../src/ASF/sam0/drivers/pac/pac_sam_d_r_h</Value>
     </ListValues>
@@ -504,9 +504,9 @@
       <Value>../src</Value>
       <Value>../src/config</Value>
       <Value>../src/ASF/common/services/crc32</Value>
+      <Value>../src/ASF/sam0/drivers/nvm</Value>
       <Value>../src/ASF/sam0/drivers/dsu</Value>
       <Value>../src/ASF/sam0/drivers/dsu/crc32</Value>
-      <Value>../src/ASF/sam0/drivers/nvm</Value>
       <Value>../src/ASF/sam0/drivers/pac</Value>
       <Value>../src/ASF/sam0/drivers/pac/pac_sam_d_r_h</Value>
     </ListValues>
@@ -552,9 +552,9 @@
       <Value>../src</Value>
       <Value>../src/config</Value>
       <Value>../src/ASF/common/services/crc32</Value>
+      <Value>../src/ASF/sam0/drivers/nvm</Value>
       <Value>../src/ASF/sam0/drivers/dsu</Value>
       <Value>../src/ASF/sam0/drivers/dsu/crc32</Value>
-      <Value>../src/ASF/sam0/drivers/nvm</Value>
       <Value>../src/ASF/sam0/drivers/pac</Value>
       <Value>../src/ASF/sam0/drivers/pac/pac_sam_d_r_h</Value>
     </ListValues>
@@ -623,9 +623,9 @@
       <Value>../src</Value>
       <Value>../src/config</Value>
       <Value>../src/ASF/common/services/crc32</Value>
+      <Value>../src/ASF/sam0/drivers/nvm</Value>
       <Value>../src/ASF/sam0/drivers/dsu</Value>
       <Value>../src/ASF/sam0/drivers/dsu/crc32</Value>
-      <Value>../src/ASF/sam0/drivers/nvm</Value>
       <Value>../src/ASF/sam0/drivers/pac</Value>
       <Value>../src/ASF/sam0/drivers/pac/pac_sam_d_r_h</Value>
     </ListValues>
@@ -691,9 +691,9 @@
       <Value>../src</Value>
       <Value>../src/config</Value>
       <Value>../src/ASF/common/services/crc32</Value>
+      <Value>../src/ASF/sam0/drivers/nvm</Value>
       <Value>../src/ASF/sam0/drivers/dsu</Value>
       <Value>../src/ASF/sam0/drivers/dsu/crc32</Value>
-      <Value>../src/ASF/sam0/drivers/nvm</Value>
       <Value>../src/ASF/sam0/drivers/pac</Value>
       <Value>../src/ASF/sam0/drivers/pac/pac_sam_d_r_h</Value>
     </ListValues>
@@ -740,9 +740,9 @@
       <Value>../src</Value>
       <Value>../src/config</Value>
       <Value>../src/ASF/common/services/crc32</Value>
+      <Value>../src/ASF/sam0/drivers/nvm</Value>
       <Value>../src/ASF/sam0/drivers/dsu</Value>
       <Value>../src/ASF/sam0/drivers/dsu/crc32</Value>
-      <Value>../src/ASF/sam0/drivers/nvm</Value>
       <Value>../src/ASF/sam0/drivers/pac</Value>
       <Value>../src/ASF/sam0/drivers/pac/pac_sam_d_r_h</Value>
     </ListValues>

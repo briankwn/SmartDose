@@ -68,17 +68,17 @@
 #include <string.h>
 #include "SerialConsole/SerialConsole.h"
 #include "sd_mmc_spi.h"
+#include "C:\Users\gsuveer\Desktop\StarterCode\SD_MMC_EXAMPLE_Bootloader_ESE516_SPRING2019\src\ASF\sam0\drivers\dsu\crc32\crc32.h"
 
 //! Structure for UART module connected to EDBG (used for unit test output)
 struct usart_module cdc_uart_module;
 static void jumpToApplication(void);
 
 
-/**
- * \brief Application entry point.
- *
- * \return Unused (ANSI-C compatibility).
- */
+// Prototype for update_firmware
+int8_t update_firmware();
+
+
 int main(void)
 {
 
@@ -102,7 +102,7 @@ int main(void)
 	cpu_irq_enable();
 
 	SerialConsoleWriteString("ESE516 - ENTER BOOTLOADER");	//Order to add string to TX Buffer
-
+	 
 
 	SerialConsoleWriteString("\x0C\n\r-- SD/MMC Card Example on FatFs --\n\r");
 
@@ -153,6 +153,7 @@ int main(void)
 			LogMessage(LOG_INFO_LVL ,"[FAIL]\r\n");
 			goto main_end_of_test;
 		}
+		
 		SerialConsoleWriteString("[OK]\r\n");
 		f_close(&file_object); //Close file
 		SerialConsoleWriteString("Test is successful.\n\r");
@@ -165,33 +166,25 @@ int main(void)
 		SerialConsoleWriteString("Opening params.csv\r\n");
 		res = f_open(&params_file, (char const *)params_file_name, FA_READ);
 		if (res != FR_OK) {
-			LogMessage(LOG_INFO_LVL ,"[FAIL] res %d\r\n", res);
+			LogMessage(LOG_INFO_LVL ,"[FAIL: Could not open params file] res %d\r\n", res);
 			goto main_end_of_test;
 		}
-		
+	
 		char params[50];
-
-
-		UINT* br;
-		res = f_read (&params_file,(char const *)params, 50, br);
+		UINT br;
+		res = f_read (&params_file,(char const *)params, 50, &br);
 		if (res != FR_OK) {
-			LogMessage(LOG_INFO_LVL ,"[FAIL] res %d\r\n", res);
+			LogMessage(LOG_INFO_LVL ,"[FAIL: Could not read Parameters File] res %d\r\n", res);
 			goto main_end_of_test;
 		}
+		LogMessage(LOG_INFO_LVL ,"[Bytes read from params.csv: ] %d\r\n", br);
+		
 		f_close(&params_file);		
 
 		char * flag = strtok(params, ",");
 		char * crc_from_file = strtok(NULL, ",");
 		
-		if(strcmp("1",flag)==0){ //or button pressed
-			//update
-			if(update_firmware()==0){
-				
-			}
-		}
-		
-		
-		// Reading  from version.txt
+		// Reading  from params.csv
 		SerialConsoleWriteString("Reading from params.csv \r\n");
 
 		SerialConsoleWriteString(flag);
@@ -199,6 +192,20 @@ int main(void)
 		SerialConsoleWriteString(crc_from_file);
 		SerialConsoleWriteString("\r\n");
 		//end of params test
+		
+		if(port_pin_get_input_level(BUTTON_0_PIN) == BUTTON_0_ACTIVE)
+		{
+				SerialConsoleWriteString("Button was pressed: UPDATING FIRMWARE \r\n");
+				update_firmware();
+		}
+		else if(strcmp("1",flag)==0){ 
+				SerialConsoleWriteString("Update Flag was set: UPDATING FIRMWARE \r\n");
+				update_firmware();
+		}
+		else{   // Remember to insert condition when no app is present
+				SerialConsoleWriteString("NO REASON TO UPDATE : JUMPING TO APPLICATION \r\n");
+		}
+		
 		
 main_end_of_test:
 		SerialConsoleWriteString("Please unplug the card.\n\r");
@@ -220,7 +227,7 @@ main_end_of_test:
 }
 
 
-#define APP_START_ADDRESS  ((uint32_t)0xB000) //Must be address of start of main application
+#define APP_START_ADDRESS  ((uint32_t)0x00100000) //Must be address of start of main application
 
 /// Main application reset vector address
 #define APP_START_RESET_VEC_ADDRESS (APP_START_ADDRESS+(uint32_t)0x04)
@@ -253,49 +260,101 @@ applicationCodeEntry =
 applicationCodeEntry();
 }
 
-int8_t void update_firmware(){
+int8_t update_firmware(){
 	//returns -1 if update failed, 0 if successful and ready to jump
 	//find all necessary addresses to start at
-	
+			setLogLevel(LOG_INFO_LVL);
 	//bomb entire application code region
 	
 	//for firmware image
 			//start of params test
-			char firmware_file_name[] = "monkeybrains.bin";
+			char firmware_file_name[] = "0:app.bin";
 			FIL firmware_file;
 			FRESULT res;
 			int8_t successful_update = -1;
 
 			// OPEN params.csv
-			SerialConsoleWriteString("Opening params.csv\r\n");
+			SerialConsoleWriteString("READING app.bin \r\n");
+			firmware_file_name[0] = LUN_ID_SD_MMC_0_MEM + '0' ;
 			res = f_open(&firmware_file, (char const *)firmware_file_name, FA_READ);
 			if (res != FR_OK) {
-				LogMessage(LOG_INFO_LVL ,"[FAIL] res %d\r\n", res);
+				LogMessage(LOG_INFO_LVL ,"[FAIL: Could not open Firmware File] res %d\r\n", res);
 				//set result to -1, file not read correctly
 				successful_update = -1;
-				goto end_of_update_firmware;
 			}
-			
-			
-			
-			
-			
-			
-			
-			
-			char block[50];
 
-			UINT* br;
-			res = f_read (&firmware_file,(char const *)block, 50, br);
-			if (res != FR_OK) {
-				LogMessage(LOG_INFO_LVL ,"[FAIL] res %d\r\n", res);
-				//set result to -1, file not read correctly
-				successful_update = -1;
-				goto end_of_update_firmware;
-			}
+			struct nvm_parameters  *const  	parameters;
 			
+			nvm_get_parameters 	( &parameters);				// To fetch parameter From out Device
+			SerialConsoleWriteString("GOT NVM PARAMETERS \r\n");
+			uint32_t page_size = parameters->page_size;		//Number of bytes per page
+			uint32_t row_size = page_size * 4;				//Calculate row size from page size in bytes 			
+			char block[row_size];		
+			uint32_t row_address = APP_START_ADDRESS;		//Start Address
+			LogMessage(LOG_INFO_LVL,"PAGE SIZE IS %d bytes\r\n",page_size);
+			LogMessage(LOG_INFO_LVL,"ROW  SIZE IS %d bytes\r\n",row_size);
+			uint32_t crc_on_block=0;
+			uint32_t crc_on_nvm=0;
+			dsu_crc32_init();								//Initializing CRC
 			
-			f_close(&firmware_file);
+			SerialConsoleWriteString("STARTING MOVE BLOCKS \r\n");
+			UINT br;
+			while(!f_eof(&firmware_file)) // While not end of Firmware file 
+			{
+					res = f_read (&firmware_file,block, row_size, &br);
+					if (res != FR_OK) {
+						LogMessage(LOG_INFO_LVL ,"[FAIL: Could not read Block from Firmware File] res %d, bytes read %d\r\n", res, br);
+						successful_update = -1; //set result to -1, file not read correctly
+						break;
+					}
+					
+					// Calculate CRC on block
+					res= dsu_crc32_cal(block,row_size,&crc_on_block);
+					if (res != STATUS_OK) {
+						LogMessage(LOG_INFO_LVL ,"[FAIL: CRC ON Buffer] res %d\r\n", res);
+						successful_update = -1; //set result to -1, file not read correctly
+						break;
+					}
+					//Erase Row From NVM
+					nvm_erase_row (row_address);
+					if (res != STATUS_OK) {
+						LogMessage(LOG_INFO_LVL ,"[FAIL: NVM ROW DELETION] res %d\r\n", res);
+						successful_update = -1; //set result to -1, file not read correctly
+						break;
+					}
+					// Writing block on NVM 	
+					nvm_write_buffer (row_address, block, row_size);
+					if (res != STATUS_OK) {
+						LogMessage(LOG_INFO_LVL ,"[FAIL: WRITE ON BUFFER] res %d\r\n", res);
+						successful_update = -1; //set result to -1, file not read correctly
+						break;
+					}
+					
+					
+					//calculate CRC on NVM
+					dsu_crc32_cal(row_address,row_size,&crc_on_nvm); 
+					if (res != STATUS_OK) {
+						LogMessage(LOG_INFO_LVL ,"[FAIL: CRC ON NVM] res %d\r\n", res);
+						successful_update = -1; //set result to -1, file not read correctly
+						break;
+					}
+					
+					// CHECKING IF CRCs match
+					if (crc_on_nvm == crc_on_block){
+						row_address = row_address + row_size;
+						
+						// All Went as Planned 
+						
+					}
+					else
+					{
+						LogMessage(LOG_INFO_LVL ,"[FAIL: CRC DID NOT MATCH]\r\n");
+						break;
+						//Plan B
+					}	
+			}	
+				
+			f_close(&firmware_file); // Read a block
 			
 			
 	//read from flash into buffer
@@ -307,6 +366,6 @@ int8_t void update_firmware(){
 	//crc buffer
 	
 	//compare crcs and return accordingly
-
-end_of_update_firmware:
+	SerialConsoleWriteString("RETURNING FROM FIRMWARE UPDATE \r\n");
+	return successful_update;
 }
