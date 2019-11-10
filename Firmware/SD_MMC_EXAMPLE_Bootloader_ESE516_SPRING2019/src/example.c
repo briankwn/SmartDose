@@ -68,7 +68,7 @@
 #include <string.h>
 #include "SerialConsole/SerialConsole.h"
 #include "sd_mmc_spi.h"
-#include "C:\Users\gsuveer\Desktop\StarterCode\SD_MMC_EXAMPLE_Bootloader_ESE516_SPRING2019\src\ASF\sam0\drivers\dsu\crc32\crc32.h"
+//#include "C:\Users\gsuveer\Desktop\StarterCode\SD_MMC_EXAMPLE_Bootloader_ESE516_SPRING2019\src\ASF\sam0\drivers\dsu\crc32\crc32.h"
 
 //! Structure for UART module connected to EDBG (used for unit test output)
 struct usart_module cdc_uart_module;
@@ -283,19 +283,23 @@ int8_t update_firmware(){
 				successful_update = -1;
 			}
 
-			struct nvm_parameters  *const  	parameters;
+			//struct nvm_parameters  *const  	parameters;
 			
-			nvm_get_parameters 	( &parameters);				// To fetch parameter From out Device
-			SerialConsoleWriteString("GOT NVM PARAMETERS \r\n");
-			uint32_t page_size = parameters->page_size;		//Number of bytes per page
-			uint32_t row_size = page_size * 4;				//Calculate row size from page size in bytes 			
+			//nvm_get_parameters 	( &parameters);				// To fetch parameter From out Device
+			//SerialConsoleWriteString("GOT NVM PARAMETERS \r\n");
+			//uint32_t page_size = parameters->page_size;		//Number of bytes per page
+			//uint32_t row_size = page_size * 4;				//Calculate row size from page size in bytes 			
+			uint32_t row_size = 128;
 			char block[row_size];		
+			char nvm_block[row_size];
 			uint32_t row_address = APP_START_ADDRESS;		//Start Address
-			LogMessage(LOG_INFO_LVL,"PAGE SIZE IS %d bytes\r\n",page_size);
+			//LogMessage(LOG_INFO_LVL,"PAGE SIZE IS %d bytes\r\n",page_size);
 			LogMessage(LOG_INFO_LVL,"ROW  SIZE IS %d bytes\r\n",row_size);
-			uint32_t crc_on_block=0;
-			uint32_t crc_on_nvm=0;
-			dsu_crc32_init();								//Initializing CRC
+			//uint32_t crc_on_block=0;
+			//uint32_t crc_on_nvm=0;
+			crc32_t crc_on_block=0;
+			crc32_t	crc_on_nvm=0;
+			//dsu_crc32_init();								//Initializing CRC
 			
 			SerialConsoleWriteString("STARTING MOVE BLOCKS \r\n");
 			UINT br;
@@ -307,14 +311,17 @@ int8_t update_firmware(){
 						successful_update = -1; //set result to -1, file not read correctly
 						break;
 					}
+					LogMessage(LOG_INFO_LVL ,"[Read Block from Firmware File] %d, bytes \r\n", br);
 					
 					// Calculate CRC on block
-					res= dsu_crc32_cal(block,row_size,&crc_on_block);
+					//res= dsu_crc32_cal(block,row_size,&crc_on_block);
+					crc32_recalculate(block,row_size,&crc_on_block);
 					if (res != STATUS_OK) {
 						LogMessage(LOG_INFO_LVL ,"[FAIL: CRC ON Buffer] res %d\r\n", res);
 						successful_update = -1; //set result to -1, file not read correctly
 						break;
 					}
+					LogMessage(LOG_INFO_LVL ,"[CRC ON Buffer]  %d\r\n", crc_on_block);
 					//Erase Row From NVM
 					nvm_erase_row (row_address);
 					if (res != STATUS_OK) {
@@ -325,20 +332,27 @@ int8_t update_firmware(){
 					// Writing block on NVM 	
 					nvm_write_buffer (row_address, block, row_size);
 					if (res != STATUS_OK) {
-						LogMessage(LOG_INFO_LVL ,"[FAIL: WRITE ON BUFFER] res %d\r\n", res);
+						LogMessage(LOG_INFO_LVL ,"[FAIL: WRITE ON NVM] res %d\r\n", res);
 						successful_update = -1; //set result to -1, file not read correctly
 						break;
 					}
-					
+					// Read What I just wrote
+					nvm_read_buffer (row_address, nvm_block, row_size);
+					if (res != STATUS_OK) {
+							LogMessage(LOG_INFO_LVL ,"[FAIL: READ FROM NVM] res %d\r\n", res);
+							successful_update = -1; //set result to -1, file not read correctly
+							break;
+					}
 					
 					//calculate CRC on NVM
-					dsu_crc32_cal(row_address,row_size,&crc_on_nvm); 
+					//dsu_crc32_cal(nvm_block,row_size,&crc_on_nvm); 
+					crc32_recalculate(nvm_block,row_size,&crc_on_nvm);
 					if (res != STATUS_OK) {
 						LogMessage(LOG_INFO_LVL ,"[FAIL: CRC ON NVM] res %d\r\n", res);
 						successful_update = -1; //set result to -1, file not read correctly
 						break;
 					}
-					
+					LogMessage(LOG_INFO_LVL ,"[CRC ON NVM]  %d\r\n", crc_on_nvm);
 					// CHECKING IF CRCs match
 					if (crc_on_nvm == crc_on_block){
 						row_address = row_address + row_size;

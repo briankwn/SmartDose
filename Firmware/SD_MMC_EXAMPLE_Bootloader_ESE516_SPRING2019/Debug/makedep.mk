@@ -8,11 +8,7 @@ src\ASF\common\services\crc32\crc32.c
 
 src\ASF\sam0\boards\board_init.c
 
-src\ASF\sam0\drivers\dsu\crc32\crc32.c
-
 src\ASF\sam0\drivers\nvm\nvm.c
-
-src\ASF\sam0\drivers\pac\pac_sam_d_r_h\pac.c
 
 src\SerialConsole\circular_buffer.c
 

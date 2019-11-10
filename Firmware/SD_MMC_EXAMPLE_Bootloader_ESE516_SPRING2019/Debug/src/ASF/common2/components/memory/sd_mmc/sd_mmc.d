@@ -128,16 +128,15 @@ src/ASF/common2/components/memory/sd_mmc/sd_mmc.d \
  ../src/ASF/common/services/storage/ctrl_access/ctrl_access.h \
  ../src/config/conf_access.h \
  ../src/ASF/common2/components/memory/sd_mmc/sd_mmc_mem.h \
- ../src/ASF/sam0/drivers/nvm/nvm.h ../src/ASF/sam0/drivers/pac/pac.h \
- ../src/ASF/sam0/drivers/system/system.h \
+ ../src/ASF/sam0/drivers/nvm/nvm.h ../src/ASF/sam0/drivers/port/port.h \
  ../src/ASF/sam0/drivers/system/pinmux/pinmux.h \
- ../src/ASF/sam0/drivers/system/power/power_sam_d_r_h/power.h \
- ../src/ASF/sam0/drivers/system/reset/reset_sam_d_r_h/reset.h \
- ../src/ASF/sam0/drivers/port/port.h \
  ../src/ASF/sam0/drivers/rtc/rtc_calendar.h ../src/config/conf_clocks.h \
  ../src/ASF/sam0/drivers/rtc/rtc_tamper.h \
  ../src/ASF/common2/components/memory/sd_mmc/sd_mmc.h \
  ../src/config/conf_sd_mmc.h ../src/ASF/sam0/drivers/sercom/sercom.h \
+ ../src/ASF/sam0/drivers/system/system.h \
+ ../src/ASF/sam0/drivers/system/power/power_sam_d_r_h/power.h \
+ ../src/ASF/sam0/drivers/system/reset/reset_sam_d_r_h/reset.h \
  ../src/ASF/sam0/drivers/system/interrupt/system_interrupt.h \
  ../src/ASF/sam0/drivers/system/interrupt/system_interrupt_samd21/system_interrupt_features.h \
  ../src/ASF/sam0/drivers/sercom/sercom_pinout.h \
@@ -420,17 +419,9 @@ c:\program\ files\ (x86)\atmel\studio\7.0\toolchain\arm\arm-gnu-toolchain\arm-no
 
 ../src/ASF/sam0/drivers/nvm/nvm.h:
 
-../src/ASF/sam0/drivers/pac/pac.h:
-
-../src/ASF/sam0/drivers/system/system.h:
+../src/ASF/sam0/drivers/port/port.h:
 
 ../src/ASF/sam0/drivers/system/pinmux/pinmux.h:
-
-../src/ASF/sam0/drivers/system/power/power_sam_d_r_h/power.h:
-
-../src/ASF/sam0/drivers/system/reset/reset_sam_d_r_h/reset.h:
-
-../src/ASF/sam0/drivers/port/port.h:
 
 ../src/ASF/sam0/drivers/rtc/rtc_calendar.h:
 
@@ -443,6 +434,12 @@ c:\program\ files\ (x86)\atmel\studio\7.0\toolchain\arm\arm-gnu-toolchain\arm-no
 ../src/config/conf_sd_mmc.h:
 
 ../src/ASF/sam0/drivers/sercom/sercom.h:
+
+../src/ASF/sam0/drivers/system/system.h:
+
+../src/ASF/sam0/drivers/system/power/power_sam_d_r_h/power.h:
+
+../src/ASF/sam0/drivers/system/reset/reset_sam_d_r_h/reset.h:
 
 ../src/ASF/sam0/drivers/system/interrupt/system_interrupt.h:
 
