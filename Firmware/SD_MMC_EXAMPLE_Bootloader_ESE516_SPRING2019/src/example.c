@@ -184,13 +184,13 @@ int main(void)
 		char * flag = strtok(params, ",");
 		char * string_crc_from_file = strtok(NULL, ",");
 		char * useless;
-		uint32_t crc_from_file = strtoul(string_crc_from_file,useless,16); // could theoretically do this backwards and it'd be cleaner
+		uint32_t crc_from_file = strtoul(string_crc_from_file,&useless,16); // could theoretically do this backwards and it'd be cleaner
 		// Reading  from params.csv
 		SerialConsoleWriteString("Reading from params.csv \r\n");
 
 		SerialConsoleWriteString(flag);
 		SerialConsoleWriteString("\r\n");
-		SerialConsoleWriteString(crc_from_file);
+		SerialConsoleWriteString(string_crc_from_file);
 		SerialConsoleWriteString("\r\n");
 		//end of params test
 		
@@ -301,23 +301,29 @@ int8_t update_firmware(uint32_t crc_from_file){
 			SerialConsoleWriteString("GOT NVM PARAMETERS \r\n");
 			uint32_t page_size = parameters.page_size;		//Number of bytes per page --//page size is 64 bytes 
 			uint32_t row_size = page_size * 4;//1028;				//Calculate row size from page size in bytes 
-			uint32_t total_rows = parameters.nvm_number_of_pages /4 - (APP_START_ADDRESS/row_size);	
+			uint32_t total_rows = (firmware_file.fsize /row_size) + 1; //add 1 because we want to round up
+			uint32_t total_pages = (firmware_file.fsize / page_size) + 1;
+			
+			//IMPORTANT -- MIGHT WANT TO BOUNDARY CHECK THE TOTAL ROWS VALUE ABOVE TO MAKE SURE WE HAVE ROOM BEFORE WE DELETE
 	
 			uint32_t row_address = APP_START_ADDRESS;		//Start Address
 			LogMessage(LOG_INFO_LVL,"PAGE SIZE IS %d bytes\r\n",page_size);
 			LogMessage(LOG_INFO_LVL,"ROW  SIZE IS %d bytes\r\n",row_size);
+			LogMessage(LOG_INFO_LVL,"FIRMWARE SIZE IS %d bytes\r\n",firmware_file.fsize);
+			LogMessage(LOG_INFO_LVL,"TOTAL_ROWS IS %d\r\n",total_rows);
 			uint32_t crc_on_block=0;
 			uint32_t crc_on_nvm=0;
 			
 			dsu_crc32_init();								//Initializing CRC
 			
 			SerialConsoleWriteString("ERASING APPLICATION CODE \r\n");			
-			for (uint16_t i ; i < total_rows ; i++){ //using total rows means we delete the entire nvm instead of just enough to fit the new program in
+			for (uint16_t i ; i < total_rows ; i++){ //should double check here if we need to delete the entire nvm or just enough to fit our file in
 				res = nvm_erase_row(row_address + (i * row_size));
+				//SerialConsoleWriteString("DELETINGROWS! \r\n");
 				if (res != STATUS_OK) {
 					LogMessage(LOG_INFO_LVL ,"[FAIL: NVM ROW DELETION] res %d\r\n", res);
 					successful_update = -1; //set result to -1, erase not performed correctly
-					break; //this will just move to write, need a better solution since jumping doesn't seem happy 
+					break; 
 				}
 			}
 			
@@ -325,57 +331,79 @@ int8_t update_firmware(uint32_t crc_from_file){
 			UINT br;
 			char block[page_size];	
 			//while(!f_eof(&firmware_file)) // While not end of Firmware file 
-			for (uint32_t i ; i < (total_rows * 4) ; i++)
-			{
-					SerialConsoleWriteString("MOVING BLOCKS \r\n");
+			if(successful_update == 1){
+				for (uint32_t i ; i < (total_pages) ; i++)
+				{
+						SerialConsoleWriteString("MOVING BLOCKS \r\n");
 								
-					res = f_read (&firmware_file,block, page_size, &br);
-					if (res != FR_OK) {
-						LogMessage(LOG_INFO_LVL ,"[FAIL: Could not read Block from Firmware File] res %d, bytes read %d\r\n", res, br);
-						successful_update = -1; //set result to -1, file not read correctly
-						break;
-					}
+						res = f_read (&firmware_file,block, page_size, &br);
+						if (res != FR_OK) {
+							LogMessage(LOG_INFO_LVL ,"[FAIL: Could not read Block from Firmware File] res %d, bytes read %d\r\n", res, br);
+							successful_update = -1; //set result to -1, file not read correctly
+							break;
+						}
 					
-					// Writing block on NVM
-					res = nvm_write_buffer(row_address + (page_size * i), block, page_size);
-					if (res != STATUS_OK) {
-						LogMessage(LOG_INFO_LVL ,"[FAIL: WRITE ON BUFFER] res %d\r\n", res);
-						successful_update = -1; //set result to -1, file not read correctly
-						break;
-					}
+						// Writing block on NVM
+						res = nvm_write_buffer(row_address + (page_size * i), block, page_size);
+						if (res != STATUS_OK) {
+							LogMessage(LOG_INFO_LVL ,"[FAIL: WRITE ON BUFFER] res %d\r\n", res);
+							successful_update = -1; //set result to -1, file not read correctly
+							break;
+						}
+				}
 			}
 			f_close(&firmware_file); // we're done with this now, although we could do this after the check
 			
 			//calculate CRC on NVM
-			for (uint32_t i ; i < (total_rows * 4) ; i++){
-				res = nvm_read_buffer(row_address + (page_size * i), block, page_size);
+			if(successful_update == 1){
+				for (uint32_t i ; i < (total_pages -1) ; i++){ //do for everything but the last page
+					res = nvm_read_buffer(row_address + (page_size * i), block, page_size);
+					if (res != STATUS_OK) {
+						LogMessage(LOG_INFO_LVL ,"[FAIL: READ ON BUFFER] res %d\r\n", res);
+						successful_update = -1; //set result to -1, file not read correctly
+						break;
+					}
+					res = crc32_recalculate(block,page_size,&crc_on_nvm);
+					if (res != STATUS_OK) {
+						LogMessage(LOG_INFO_LVL ,"[FAIL: CRC RECALCULATE] res %d\r\n", res);
+						successful_update = -1; //set result to -1, file not read correctly
+						break;
+					}
+				}
+				//handle last page crc
+				uint32_t remainder = (firmware_file.fsize % page_size); //calculate the rest of the file
+				res = nvm_read_buffer(row_address + (page_size * (total_pages -1)), block, page_size);
 				if (res != STATUS_OK) {
 					LogMessage(LOG_INFO_LVL ,"[FAIL: READ ON BUFFER] res %d\r\n", res);
 					successful_update = -1; //set result to -1, file not read correctly
-					break;
 				}
-				res = crc32_recalculate(block,page_size,&crc_on_nvm);
+				res = crc32_recalculate(block,remainder,&crc_on_nvm);
 				if (res != STATUS_OK) {
 					LogMessage(LOG_INFO_LVL ,"[FAIL: CRC RECALCULATE] res %d\r\n", res);
 					successful_update = -1; //set result to -1, file not read correctly
-					break;
 				}
+				
 			}
 			
 			// CHECKING IF CRCs match
-			if (crc_on_nvm == crc_from_file){ //we can rework this as a single if, just inverted							
-				// All Went as Planned	
-				//successful_update = 1;					
+			if(successful_update == 1){
+				if (crc_on_nvm == crc_from_file){ //we can rework this as a single if, just inverted							
+					// All Went as Planned	
+					//successful_update = 1;
+					LogMessage(LOG_INFO_LVL ,"[SUCCESS! CRC MATCHED!]\r\n");
+					LogMessage(LOG_INFO_LVL ,"NVM  CRC: %16x\r\n", crc_on_nvm);
+					LogMessage(LOG_INFO_LVL ,"FILE CRC: %16x\r\n", crc_from_file);				
+				}
+				else
+				{
+					LogMessage(LOG_INFO_LVL ,"[FAIL: CRC DID NOT MATCH]\r\n");
+					LogMessage(LOG_INFO_LVL ,"[FAIL -- NVM  CRC: %16x\r\n", crc_on_nvm);
+					LogMessage(LOG_INFO_LVL ,"[FAIL -- FILE CRC: %16x\r\n", crc_from_file);
+					successful_update = -1; // we can theoretically use this as an informal jump, only continue if previous steps were successful
+					//break;
+					//Plan B - could recurse once or twice before we give up : )
+				}
 			}
-			else
-			{
-				LogMessage(LOG_INFO_LVL ,"[FAIL: CRC DID NOT MATCH]\r\n");
-				LogMessage(LOG_INFO_LVL ,"[FAIL: %d\r\n", crc_on_nvm);
-				LogMessage(LOG_INFO_LVL ,"[FAIL: %d\r\n", crc_from_file);
-				successful_update = -1; // we can theoretically use this as an informal jump, only continue if previous steps were successful
-				//break;
-				//Plan B - could recurse once or twice before we give up : )
-			}	
 			
 	//read from flash into buffer
 	//crc buffer
