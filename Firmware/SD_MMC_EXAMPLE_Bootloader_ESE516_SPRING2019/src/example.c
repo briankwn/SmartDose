@@ -182,8 +182,9 @@ int main(void)
 		f_close(&params_file);		
 
 		char * flag = strtok(params, ",");
-		char * crc_from_file = strtok(NULL, ",");
-		
+		char * string_crc_from_file = strtok(NULL, ",");
+		char * useless;
+		uint32_t crc_from_file = strtoul(string_crc_from_file,useless,16); // could theoretically do this backwards and it'd be cleaner
 		// Reading  from params.csv
 		SerialConsoleWriteString("Reading from params.csv \r\n");
 
@@ -196,11 +197,11 @@ int main(void)
 		if(port_pin_get_input_level(BUTTON_0_PIN) == BUTTON_0_ACTIVE)
 		{
 				SerialConsoleWriteString("Button was pressed: UPDATING FIRMWARE \r\n");
-				update_firmware();
+				update_firmware(crc_from_file);
 		}
 		else if(strcmp("1",flag)==0){ 
 				SerialConsoleWriteString("Update Flag was set: UPDATING FIRMWARE \r\n");
-				update_firmware();
+				update_firmware(crc_from_file);
 		}
 		else{   // Remember to insert condition when no app is present
 				SerialConsoleWriteString("NO REASON TO UPDATE : JUMPING TO APPLICATION \r\n");
@@ -270,7 +271,7 @@ void configure_nvm(void)
 }
 
 
-int8_t update_firmware(){
+int8_t update_firmware(uint32_t crc_from_file){
 	//returns -1 if update failed, 0 if successful and ready to jump
 	//find all necessary addresses to start at
 			setLogLevel(LOG_INFO_LVL);
@@ -281,7 +282,7 @@ int8_t update_firmware(){
 			char firmware_file_name[] = "0:app.bin";
 			FIL firmware_file;
 			FRESULT res;
-			int8_t successful_update = -1;
+			int8_t successful_update = 1;
 
 			// OPEN params.csv
 			SerialConsoleWriteString("READING app.bin \r\n");
@@ -300,7 +301,7 @@ int8_t update_firmware(){
 			SerialConsoleWriteString("GOT NVM PARAMETERS \r\n");
 			uint32_t page_size = parameters.page_size;		//Number of bytes per page --//page size is 64 bytes 
 			uint32_t row_size = page_size * 4;//1028;				//Calculate row size from page size in bytes 
-			uint32 total_rows = parameters.nvm_number_of_pages /4 - (APP_START_ADDRESS/row_size);	
+			uint32_t total_rows = parameters.nvm_number_of_pages /4 - (APP_START_ADDRESS/row_size);	
 	
 			uint32_t row_address = APP_START_ADDRESS;		//Start Address
 			LogMessage(LOG_INFO_LVL,"PAGE SIZE IS %d bytes\r\n",page_size);
@@ -347,24 +348,32 @@ int8_t update_firmware(){
 			
 			//calculate CRC on NVM
 			for (uint32_t i ; i < (total_rows * 4) ; i++){
-				res = crc32_recalculate(row_address,row_size,&crc_on_nvm);
+				res = nvm_read_buffer(row_address + (page_size * i), block, page_size);
 				if (res != STATUS_OK) {
-					LogMessage(LOG_INFO_LVL ,"[FAIL: CRC ON NVM] res %d\r\n", res);
+					LogMessage(LOG_INFO_LVL ,"[FAIL: READ ON BUFFER] res %d\r\n", res);
+					successful_update = -1; //set result to -1, file not read correctly
+					break;
+				}
+				res = crc32_recalculate(block,page_size,&crc_on_nvm);
+				if (res != STATUS_OK) {
+					LogMessage(LOG_INFO_LVL ,"[FAIL: CRC RECALCULATE] res %d\r\n", res);
 					successful_update = -1; //set result to -1, file not read correctly
 					break;
 				}
 			}
 			
 			// CHECKING IF CRCs match
-			if (crc_on_nvm == crc_on_block){							
-				// All Went as Planned						
+			if (crc_on_nvm == crc_from_file){ //we can rework this as a single if, just inverted							
+				// All Went as Planned	
+				//successful_update = 1;					
 			}
 			else
 			{
 				LogMessage(LOG_INFO_LVL ,"[FAIL: CRC DID NOT MATCH]\r\n");
 				LogMessage(LOG_INFO_LVL ,"[FAIL: %d\r\n", crc_on_nvm);
-				LogMessage(LOG_INFO_LVL ,"[FAIL: %d\r\n", crc_on_block);
-				break;
+				LogMessage(LOG_INFO_LVL ,"[FAIL: %d\r\n", crc_from_file);
+				successful_update = -1; // we can theoretically use this as an informal jump, only continue if previous steps were successful
+				//break;
 				//Plan B - could recurse once or twice before we give up : )
 			}	
 			
