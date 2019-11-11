@@ -68,7 +68,7 @@
 #include <string.h>
 #include "SerialConsole/SerialConsole.h"
 #include "sd_mmc_spi.h"
-#include "ASF\sam0\drivers\dsu\crc32\crc32.h"
+//#include "ASF\sam0\drivers\dsu\crc32\crc32.h"
 
 //! Structure for UART module connected to EDBG (used for unit test output)
 struct usart_module cdc_uart_module;
@@ -201,10 +201,14 @@ int main(void)
 		}
 		else if(strcmp("1",flag)==0){ 
 				SerialConsoleWriteString("Update Flag was set: UPDATING FIRMWARE \r\n");
-				update_firmware(crc_from_file);
+				if(update_firmware(crc_from_file) == 1){
+					goto main_end_of_test;
+				}
+
 		}
 		else{   // Remember to insert condition when no app is present
 				SerialConsoleWriteString("NO REASON TO UPDATE : JUMPING TO APPLICATION \r\n");
+					goto main_end_of_test;
 		}
 		
 		
@@ -220,10 +224,11 @@ main_end_of_test:
 		sd_mmc_deinit();
 		//Jump to application
 		SerialConsoleWriteString("ESE516 - EXIT BOOTLOADER");	//Order to add string to TX Buffer
+			
 		jumpToApplication();
-
 		while (CTRL_NO_PRESENT != sd_mmc_check(0)) {
 		}
+
 	}
 }
 
@@ -300,11 +305,16 @@ int8_t update_firmware(uint32_t crc_from_file){
 			nvm_get_parameters 	( &parameters);				// To fetch parameter From out Device
 			SerialConsoleWriteString("GOT NVM PARAMETERS \r\n");
 			uint32_t page_size = parameters.page_size;		//Number of bytes per page --//page size is 64 bytes 
-			uint32_t row_size = page_size * 4;//1028;				//Calculate row size from page size in bytes 
+			uint32_t row_size = page_size * 4;;				//Calculate row size from page size in bytes 
 			uint32_t total_rows = (firmware_file.fsize /row_size) + 1; //add 1 because we want to round up
 			uint32_t total_pages = (firmware_file.fsize / page_size) + 1;
 			
-			//IMPORTANT -- MIGHT WANT TO BOUNDARY CHECK THE TOTAL ROWS VALUE ABOVE TO MAKE SURE WE HAVE ROOM BEFORE WE DELETE
+			//IMPORTANT -- BOUNDARY CHECK THE TOTAL ROWS VALUE ABOVE TO MAKE SURE WE HAVE ROOM BEFORE WE DELETE
+			if (firmware_file.fsize > (parameters.nvm_number_of_pages * page_size - APP_START_ADDRESS)){
+				LogMessage(LOG_INFO_LVL ,"[FAIL: FIRMWARE FILE IS TOO LARGE] res %d\r\n", res);
+				successful_update = -1; //set result to -1, erase not performed correctly
+			}
+			
 	
 			uint32_t row_address = APP_START_ADDRESS;		//Start Address
 			LogMessage(LOG_INFO_LVL,"PAGE SIZE IS %d bytes\r\n",page_size);
@@ -314,28 +324,29 @@ int8_t update_firmware(uint32_t crc_from_file){
 			uint32_t crc_on_block=0;
 			uint32_t crc_on_nvm=0;
 			
-			dsu_crc32_init();								//Initializing CRC
-			
-			SerialConsoleWriteString("ERASING APPLICATION CODE \r\n");			
-			for (uint16_t i ; i < total_rows ; i++){ //should double check here if we need to delete the entire nvm or just enough to fit our file in
-				res = nvm_erase_row(row_address + (i * row_size));
-				//SerialConsoleWriteString("DELETINGROWS! \r\n");
-				if (res != STATUS_OK) {
-					LogMessage(LOG_INFO_LVL ,"[FAIL: NVM ROW DELETION] res %d\r\n", res);
-					successful_update = -1; //set result to -1, erase not performed correctly
-					break; 
+			//ERASE ALL ROWS IN FILE SIZE
+			if(successful_update == 1){
+				SerialConsoleWriteString("ERASING APPLICATION CODE \r\n");			
+				for (uint16_t i = 0; i < total_rows ; i++){ //should double check here if we need to delete the entire nvm or just enough to fit our file in
+					res = nvm_erase_row(row_address + (i * row_size));
+					if (res != STATUS_OK) {
+						LogMessage(LOG_INFO_LVL ,"[FAIL: NVM ROW DELETION] res %d\r\n", res);
+						successful_update = -1; //set result to -1, erase not performed correctly
+						break; 
+					}
 				}
 			}
 			
 			SerialConsoleWriteString("STARTING MOVE BLOCKS \r\n");
 			UINT br;
 			char block[page_size];	
-			//while(!f_eof(&firmware_file)) // While not end of Firmware file 
 			if(successful_update == 1){
-				for (uint32_t i ; i < (total_pages) ; i++)
+				for (uint32_t i = 0 ; i < (total_pages) ; i++)
 				{
-						SerialConsoleWriteString("MOVING BLOCKS \r\n");
-								
+						//SerialConsoleWriteString("MOVING BLOCKS \r\n");
+						
+						//todo: update with wait conditions for status = busy
+						
 						res = f_read (&firmware_file,block, page_size, &br);
 						if (res != FR_OK) {
 							LogMessage(LOG_INFO_LVL ,"[FAIL: Could not read Block from Firmware File] res %d, bytes read %d\r\n", res, br);
@@ -356,7 +367,7 @@ int8_t update_firmware(uint32_t crc_from_file){
 			
 			//calculate CRC on NVM
 			if(successful_update == 1){
-				for (uint32_t i ; i < (total_pages -1) ; i++){ //do for everything but the last page
+				for (uint32_t i = 0; i < (total_pages -1) ; i++){ //do for everything but the last page
 					res = nvm_read_buffer(row_address + (page_size * i), block, page_size);
 					if (res != STATUS_OK) {
 						LogMessage(LOG_INFO_LVL ,"[FAIL: READ ON BUFFER] res %d\r\n", res);

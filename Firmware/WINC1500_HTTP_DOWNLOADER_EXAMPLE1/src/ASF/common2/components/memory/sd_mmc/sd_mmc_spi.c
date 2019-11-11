@@ -333,7 +333,7 @@ void sd_mmc_spi_init(void)
 	// Set card detect pin as inputs
 	pin_conf.direction	= PORT_PIN_DIR_INPUT;
 	pin_conf.input_pull = PORT_PIN_PULL_UP;
-	port_pin_set_config(SD_MMC_0_CD_GPIO, &pin_conf);
+	//port_pin_set_config(SD_MMC_0_CD_GPIO, &pin_conf);
 
 	// Initialize SPI interface and enable it
 	struct spi_config config;

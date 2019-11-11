@@ -60,7 +60,7 @@
 
 #  define SD_MMC_CS                  EXT1_PIN_15
 
-#  define SD_MMC_0_CD_GPIO           (EXT1_PIN_10)
+//#  define SD_MMC_0_CD_GPIO           (EXT1_PIN_10)
 #  define SD_MMC_0_CD_DETECT_VALUE   0
 #else /* Dummy configuration */
 #  define SD_MMC_SPI                 0

@@ -126,7 +126,7 @@ volatile uint32_t temperature = 1;
 
 
 #define STRING_EOL                      "\r\n"
-#define STRING_HEADER                   "-- HTTP file downloader example --"STRING_EOL \
+#define STRING_HEADER                   "-- SMART DOSE APPLICATION --"STRING_EOL \
 	"-- "BOARD_NAME " --"STRING_EOL	\
 	"-- Compiled: "__DATE__ " "__TIME__ " --"STRING_EOL
 
@@ -601,11 +601,23 @@ static void init_storage(void)
 	/* Initialize SD/MMC stack. */
 	sd_mmc_init();
 	while (true) {
-		printf("init_storage: please plug an SD/MMC card in slot...\r\n");
-
+		printf("init_storage: please plug an SD/MMC card in slot...\r\n");		
+		
 		/* Wait card present and ready. */
 		do {
 			status = sd_mmc_test_unit_ready(0);
+			/*
+			if (CTRL_FAIL == status){
+				printf("fail \r\n");
+			}
+			if(CTRL_NO_PRESENT == status){
+				printf("no present \r\n");
+			}
+			if (CTRL_BUSY == status){
+				printf("busy \r\n");
+			}
+			*/
+			
 			if (CTRL_FAIL == status) {
 				printf("init_storage: SD Card install failed.\r\n");
 				printf("init_storage: try unplug and re-plug the card.\r\n");
@@ -917,9 +929,15 @@ int main(void)
 	configure_console();
 	printf(STRING_HEADER);
 	printf("\r\nThis example requires the AP to have internet access.\r\n\r\n");
-	SerialConsoleWriteString("ESE516 - Wifi Init Code\r\n");
+	printf("ESE516 - Wifi Init Code\r\n");
+	
+	/* Initialize SD/MMC storage. */
+	init_storage();
+	
 	/* Initialize the Timer. */
 	configure_timer();
+
+
 
 	/* Initialize the HTTP client service. */
 	configure_http_client();
@@ -930,8 +948,7 @@ int main(void)
 	/* Initialize the BSP. */
 	nm_bsp_init();
 
-	/* Initialize SD/MMC storage. */
-	init_storage();
+
 
 	/*Initialize BUTTON 0 as an external interrupt*/
 	configure_extint_channel();
