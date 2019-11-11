@@ -159,7 +159,7 @@ src/example.d src/example.o: ../src/example.c ../src/asf.h \
  ../src/SerialConsole/circular_buffer.h \
  ../src/ASF/common2/components/memory/sd_mmc/sd_mmc_spi.h \
  ../src/ASF/common2/components/memory/sd_mmc/sd_mmc_protocol.h \
- C:\Users\gsuveer\Desktop\StarterCode\SD_MMC_EXAMPLE_Bootloader_ESE516_SPRING2019\src\ASF\sam0\drivers\dsu\crc32\crc32.h
+ ../src/ASF\sam0\drivers\dsu\crc32\crc32.h
 
 ../src/asf.h:
 
@@ -491,4 +491,4 @@ c:\program\ files\ (x86)\atmel\studio\7.0\toolchain\arm\arm-gnu-toolchain\arm-no
 
 ../src/ASF/common2/components/memory/sd_mmc/sd_mmc_protocol.h:
 
-C:\Users\gsuveer\Desktop\StarterCode\SD_MMC_EXAMPLE_Bootloader_ESE516_SPRING2019\src\ASF\sam0\drivers\dsu\crc32\crc32.h:
+../src/ASF\sam0\drivers\dsu\crc32\crc32.h:

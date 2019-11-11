@@ -68,7 +68,7 @@
 #include <string.h>
 #include "SerialConsole/SerialConsole.h"
 #include "sd_mmc_spi.h"
-#include "C:\Users\gsuveer\Desktop\StarterCode\SD_MMC_EXAMPLE_Bootloader_ESE516_SPRING2019\src\ASF\sam0\drivers\dsu\crc32\crc32.h"
+#include "ASF\sam0\drivers\dsu\crc32\crc32.h"
 
 //! Structure for UART module connected to EDBG (used for unit test output)
 struct usart_module cdc_uart_module;
@@ -227,7 +227,7 @@ main_end_of_test:
 }
 
 
-#define APP_START_ADDRESS  ((uint32_t)0x00100000) //Must be address of start of main application
+#define APP_START_ADDRESS  ((uint32_t)0xb000) //Must be address of start of main application
 
 /// Main application reset vector address
 #define APP_START_RESET_VEC_ADDRESS (APP_START_ADDRESS+(uint32_t)0x04)
@@ -260,6 +260,16 @@ applicationCodeEntry =
 applicationCodeEntry();
 }
 
+
+void configure_nvm(void)
+{
+	struct nvm_config config_nvm;
+	nvm_get_config_defaults(&config_nvm);
+	config_nvm.manual_page_write = false;
+	nvm_set_config(&config_nvm);
+}
+
+
 int8_t update_firmware(){
 	//returns -1 if update failed, 0 if successful and ready to jump
 	//find all necessary addresses to start at
@@ -283,79 +293,80 @@ int8_t update_firmware(){
 				successful_update = -1;
 			}
 
-			struct nvm_parameters  *const  	parameters;
+			configure_nvm();
+			struct nvm_parameters parameters;
 			
 			nvm_get_parameters 	( &parameters);				// To fetch parameter From out Device
 			SerialConsoleWriteString("GOT NVM PARAMETERS \r\n");
-			uint32_t page_size = parameters->page_size;		//Number of bytes per page
-			uint32_t row_size = page_size * 4;				//Calculate row size from page size in bytes 			
-			char block[row_size];		
+			uint32_t page_size = parameters.page_size;		//Number of bytes per page --//page size is 64 bytes 
+			uint32_t row_size = page_size * 4;//1028;				//Calculate row size from page size in bytes 
+			uint32 total_rows = parameters.nvm_number_of_pages /4 - (APP_START_ADDRESS/row_size);	
+	
 			uint32_t row_address = APP_START_ADDRESS;		//Start Address
 			LogMessage(LOG_INFO_LVL,"PAGE SIZE IS %d bytes\r\n",page_size);
 			LogMessage(LOG_INFO_LVL,"ROW  SIZE IS %d bytes\r\n",row_size);
 			uint32_t crc_on_block=0;
 			uint32_t crc_on_nvm=0;
+			
 			dsu_crc32_init();								//Initializing CRC
+			
+			SerialConsoleWriteString("ERASING APPLICATION CODE \r\n");			
+			for (uint16_t i ; i < total_rows ; i++){ //using total rows means we delete the entire nvm instead of just enough to fit the new program in
+				res = nvm_erase_row(row_address + (i * row_size));
+				if (res != STATUS_OK) {
+					LogMessage(LOG_INFO_LVL ,"[FAIL: NVM ROW DELETION] res %d\r\n", res);
+					successful_update = -1; //set result to -1, erase not performed correctly
+					break; //this will just move to write, need a better solution since jumping doesn't seem happy 
+				}
+			}
 			
 			SerialConsoleWriteString("STARTING MOVE BLOCKS \r\n");
 			UINT br;
-			while(!f_eof(&firmware_file)) // While not end of Firmware file 
+			char block[page_size];	
+			//while(!f_eof(&firmware_file)) // While not end of Firmware file 
+			for (uint32_t i ; i < (total_rows * 4) ; i++)
 			{
-					res = f_read (&firmware_file,block, row_size, &br);
+					SerialConsoleWriteString("MOVING BLOCKS \r\n");
+								
+					res = f_read (&firmware_file,block, page_size, &br);
 					if (res != FR_OK) {
 						LogMessage(LOG_INFO_LVL ,"[FAIL: Could not read Block from Firmware File] res %d, bytes read %d\r\n", res, br);
 						successful_update = -1; //set result to -1, file not read correctly
 						break;
 					}
 					
-					// Calculate CRC on block
-					res= dsu_crc32_cal(block,row_size,&crc_on_block);
-					if (res != STATUS_OK) {
-						LogMessage(LOG_INFO_LVL ,"[FAIL: CRC ON Buffer] res %d\r\n", res);
-						successful_update = -1; //set result to -1, file not read correctly
-						break;
-					}
-					//Erase Row From NVM
-					nvm_erase_row (row_address);
-					if (res != STATUS_OK) {
-						LogMessage(LOG_INFO_LVL ,"[FAIL: NVM ROW DELETION] res %d\r\n", res);
-						successful_update = -1; //set result to -1, file not read correctly
-						break;
-					}
-					// Writing block on NVM 	
-					nvm_write_buffer (row_address, block, row_size);
+					// Writing block on NVM
+					res = nvm_write_buffer(row_address + (page_size * i), block, page_size);
 					if (res != STATUS_OK) {
 						LogMessage(LOG_INFO_LVL ,"[FAIL: WRITE ON BUFFER] res %d\r\n", res);
 						successful_update = -1; //set result to -1, file not read correctly
 						break;
 					}
-					
-					
-					//calculate CRC on NVM
-					dsu_crc32_cal(row_address,row_size,&crc_on_nvm); 
-					if (res != STATUS_OK) {
-						LogMessage(LOG_INFO_LVL ,"[FAIL: CRC ON NVM] res %d\r\n", res);
-						successful_update = -1; //set result to -1, file not read correctly
-						break;
-					}
-					
-					// CHECKING IF CRCs match
-					if (crc_on_nvm == crc_on_block){
-						row_address = row_address + row_size;
-						
-						// All Went as Planned 
-						
-					}
-					else
-					{
-						LogMessage(LOG_INFO_LVL ,"[FAIL: CRC DID NOT MATCH]\r\n");
-						break;
-						//Plan B
-					}	
-			}	
-				
-			f_close(&firmware_file); // Read a block
+			}
+			f_close(&firmware_file); // we're done with this now, although we could do this after the check
 			
+			//calculate CRC on NVM
+			for (uint32_t i ; i < (total_rows * 4) ; i++){
+				res = crc32_recalculate(row_address,row_size,&crc_on_nvm);
+				if (res != STATUS_OK) {
+					LogMessage(LOG_INFO_LVL ,"[FAIL: CRC ON NVM] res %d\r\n", res);
+					successful_update = -1; //set result to -1, file not read correctly
+					break;
+				}
+			}
+			
+			// CHECKING IF CRCs match
+			if (crc_on_nvm == crc_on_block){							
+				// All Went as Planned						
+			}
+			else
+			{
+				LogMessage(LOG_INFO_LVL ,"[FAIL: CRC DID NOT MATCH]\r\n");
+				LogMessage(LOG_INFO_LVL ,"[FAIL: %d\r\n", crc_on_nvm);
+				LogMessage(LOG_INFO_LVL ,"[FAIL: %d\r\n", crc_on_block);
+				break;
+				//Plan B - could recurse once or twice before we give up : )
+			}	
 			
 	//read from flash into buffer
 	//crc buffer

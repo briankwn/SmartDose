@@ -396,7 +396,7 @@ Discarded input sections
  .debug_macro   0x00000000       0x3e src/ASF/common/services/crc32/crc32.o
  .debug_macro   0x00000000      0x3df src/ASF/common/services/crc32/crc32.o
  .debug_line    0x00000000      0x8e0 src/ASF/common/services/crc32/crc32.o
- .debug_str     0x00000000    0x8019a src/ASF/common/services/crc32/crc32.o
+ .debug_str     0x00000000    0x801ab src/ASF/common/services/crc32/crc32.o
  .comment       0x00000000       0x5a src/ASF/common/services/crc32/crc32.o
  .debug_frame   0x00000000       0x34 src/ASF/common/services/crc32/crc32.o
  .ARM.attributes
@@ -634,7 +634,7 @@ Discarded input sections
  .debug_macro   0x00000000       0x18 src/ASF/sam0/drivers/dsu/crc32/crc32.o
  .debug_macro   0x00000000       0x16 src/ASF/sam0/drivers/dsu/crc32/crc32.o
  .debug_line    0x00000000      0xb41 src/ASF/sam0/drivers/dsu/crc32/crc32.o
- .debug_str     0x00000000    0x806c0 src/ASF/sam0/drivers/dsu/crc32/crc32.o
+ .debug_str     0x00000000    0x806d1 src/ASF/sam0/drivers/dsu/crc32/crc32.o
  .comment       0x00000000       0x5a src/ASF/sam0/drivers/dsu/crc32/crc32.o
  .debug_frame   0x00000000       0x2c src/ASF/sam0/drivers/dsu/crc32/crc32.o
  .ARM.attributes
@@ -895,7 +895,7 @@ Discarded input sections
  .debug_macro   0x00000000       0x2e src/ASF/sam0/drivers/nvm/nvm.o
  .debug_macro   0x00000000       0x16 src/ASF/sam0/drivers/nvm/nvm.o
  .debug_line    0x00000000      0xde9 src/ASF/sam0/drivers/nvm/nvm.o
- .debug_str     0x00000000    0x8162f src/ASF/sam0/drivers/nvm/nvm.o
+ .debug_str     0x00000000    0x81640 src/ASF/sam0/drivers/nvm/nvm.o
  .comment       0x00000000       0x5a src/ASF/sam0/drivers/nvm/nvm.o
  .debug_frame   0x00000000      0x12c src/ASF/sam0/drivers/nvm/nvm.o
  .ARM.attributes
@@ -1133,7 +1133,7 @@ Discarded input sections
  .debug_macro   0x00000000       0x18 src/ASF/sam0/drivers/pac/pac_sam_d_r_h/pac.o
  .debug_macro   0x00000000       0x16 src/ASF/sam0/drivers/pac/pac_sam_d_r_h/pac.o
  .debug_line    0x00000000      0xa90 src/ASF/sam0/drivers/pac/pac_sam_d_r_h/pac.o
- .debug_str     0x00000000    0x805a9 src/ASF/sam0/drivers/pac/pac_sam_d_r_h/pac.o
+ .debug_str     0x00000000    0x805ba src/ASF/sam0/drivers/pac/pac_sam_d_r_h/pac.o
  .comment       0x00000000       0x5a src/ASF/sam0/drivers/pac/pac_sam_d_r_h/pac.o
  .debug_frame   0x00000000       0x30 src/ASF/sam0/drivers/pac/pac_sam_d_r_h/pac.o
  .ARM.attributes
@@ -3284,7 +3284,7 @@ Discarded input sections
  .debug_macro   0x00000000       0x11 src/ASF/common/components/wifi/winc1500/driver/source/m2m_ate_mode.o
  .debug_macro   0x00000000      0x8e0 src/ASF/common/components/wifi/winc1500/driver/source/m2m_ate_mode.o
  .debug_line    0x00000000       0x68 src/ASF/common/components/wifi/winc1500/driver/source/m2m_ate_mode.o
- .debug_str     0x00000000     0x2610 src/ASF/common/components/wifi/winc1500/driver/source/m2m_ate_mode.o
+ .debug_str     0x00000000     0x2621 src/ASF/common/components/wifi/winc1500/driver/source/m2m_ate_mode.o
  .comment       0x00000000       0x5a src/ASF/common/components/wifi/winc1500/driver/source/m2m_ate_mode.o
  .ARM.attributes
                 0x00000000       0x32 src/ASF/common/components/wifi/winc1500/driver/source/m2m_ate_mode.o
@@ -3535,7 +3535,7 @@ Discarded input sections
  .debug_macro   0x00000000       0x3a src/ASF/common/components/wifi/winc1500/driver/source/m2m_crypto.o
  .debug_macro   0x00000000       0xee src/ASF/common/components/wifi/winc1500/driver/source/m2m_crypto.o
  .debug_line    0x00000000      0xaca src/ASF/common/components/wifi/winc1500/driver/source/m2m_crypto.o
- .debug_str     0x00000000    0x8558e src/ASF/common/components/wifi/winc1500/driver/source/m2m_crypto.o
+ .debug_str     0x00000000    0x8559f src/ASF/common/components/wifi/winc1500/driver/source/m2m_crypto.o
  .comment       0x00000000       0x5a src/ASF/common/components/wifi/winc1500/driver/source/m2m_crypto.o
  .ARM.attributes
                 0x00000000       0x32 src/ASF/common/components/wifi/winc1500/driver/source/m2m_crypto.o
@@ -4067,7 +4067,7 @@ Discarded input sections
  .debug_macro   0x00000000      0x275 src/ASF/common/components/wifi/winc1500/driver/source/m2m_ota.o
  .debug_macro   0x00000000       0x16 src/ASF/common/components/wifi/winc1500/driver/source/m2m_ota.o
  .debug_line    0x00000000      0xb7d src/ASF/common/components/wifi/winc1500/driver/source/m2m_ota.o
- .debug_str     0x00000000    0x85547 src/ASF/common/components/wifi/winc1500/driver/source/m2m_ota.o
+ .debug_str     0x00000000    0x85558 src/ASF/common/components/wifi/winc1500/driver/source/m2m_ota.o
  .comment       0x00000000       0x5a src/ASF/common/components/wifi/winc1500/driver/source/m2m_ota.o
  .debug_frame   0x00000000      0x178 src/ASF/common/components/wifi/winc1500/driver/source/m2m_ota.o
  .ARM.attributes
@@ -4315,7 +4315,7 @@ Discarded input sections
  .debug_macro   0x00000000       0xee src/ASF/common/components/wifi/winc1500/driver/source/m2m_periph.o
  .debug_macro   0x00000000       0x16 src/ASF/common/components/wifi/winc1500/driver/source/m2m_periph.o
  .debug_line    0x00000000      0xa6c src/ASF/common/components/wifi/winc1500/driver/source/m2m_periph.o
- .debug_str     0x00000000    0x853bb src/ASF/common/components/wifi/winc1500/driver/source/m2m_periph.o
+ .debug_str     0x00000000    0x853cc src/ASF/common/components/wifi/winc1500/driver/source/m2m_periph.o
  .comment       0x00000000       0x5a src/ASF/common/components/wifi/winc1500/driver/source/m2m_periph.o
  .ARM.attributes
                 0x00000000       0x32 src/ASF/common/components/wifi/winc1500/driver/source/m2m_periph.o
@@ -4598,7 +4598,7 @@ Discarded input sections
  .debug_macro   0x00000000       0x16 src/ASF/common/components/wifi/winc1500/driver/source/m2m_ssl.o
  .debug_macro   0x00000000       0xee src/ASF/common/components/wifi/winc1500/driver/source/m2m_ssl.o
  .debug_line    0x00000000      0xbb3 src/ASF/common/components/wifi/winc1500/driver/source/m2m_ssl.o
- .debug_str     0x00000000    0x86711 src/ASF/common/components/wifi/winc1500/driver/source/m2m_ssl.o
+ .debug_str     0x00000000    0x86722 src/ASF/common/components/wifi/winc1500/driver/source/m2m_ssl.o
  .comment       0x00000000       0x5a src/ASF/common/components/wifi/winc1500/driver/source/m2m_ssl.o
  .debug_frame   0x00000000      0x108 src/ASF/common/components/wifi/winc1500/driver/source/m2m_ssl.o
  .ARM.attributes
@@ -5944,7 +5944,7 @@ Discarded input sections
  .debug_macro   0x00000000       0x76 src/ASF/common/components/wifi/winc1500/driver/source/nmi2c.o
  .debug_macro   0x00000000      0x191 src/ASF/common/components/wifi/winc1500/driver/source/nmi2c.o
  .debug_line    0x00000000      0x9f5 src/ASF/common/components/wifi/winc1500/driver/source/nmi2c.o
- .debug_str     0x00000000    0x83c09 src/ASF/common/components/wifi/winc1500/driver/source/nmi2c.o
+ .debug_str     0x00000000    0x83c1a src/ASF/common/components/wifi/winc1500/driver/source/nmi2c.o
  .comment       0x00000000       0x5a src/ASF/common/components/wifi/winc1500/driver/source/nmi2c.o
  .ARM.attributes
                 0x00000000       0x32 src/ASF/common/components/wifi/winc1500/driver/source/nmi2c.o
@@ -6418,7 +6418,7 @@ Discarded input sections
  .debug_macro   0x00000000       0x76 src/ASF/common/components/wifi/winc1500/driver/source/nmuart.o
  .debug_macro   0x00000000      0x191 src/ASF/common/components/wifi/winc1500/driver/source/nmuart.o
  .debug_line    0x00000000      0x9f6 src/ASF/common/components/wifi/winc1500/driver/source/nmuart.o
- .debug_str     0x00000000    0x83c0a src/ASF/common/components/wifi/winc1500/driver/source/nmuart.o
+ .debug_str     0x00000000    0x83c1b src/ASF/common/components/wifi/winc1500/driver/source/nmuart.o
  .comment       0x00000000       0x5a src/ASF/common/components/wifi/winc1500/driver/source/nmuart.o
  .ARM.attributes
                 0x00000000       0x32 src/ASF/common/components/wifi/winc1500/driver/source/nmuart.o
@@ -10855,7 +10855,7 @@ Discarded input sections
  .debug_macro   0x00000000      0x3df src/ASF/sam0/drivers/system/interrupt/system_interrupt.o
  .debug_macro   0x00000000       0x2e src/ASF/sam0/drivers/system/interrupt/system_interrupt.o
  .debug_line    0x00000000      0x9a0 src/ASF/sam0/drivers/system/interrupt/system_interrupt.o
- .debug_str     0x00000000    0x807a7 src/ASF/sam0/drivers/system/interrupt/system_interrupt.o
+ .debug_str     0x00000000    0x807b8 src/ASF/sam0/drivers/system/interrupt/system_interrupt.o
  .comment       0x00000000       0x5a src/ASF/sam0/drivers/system/interrupt/system_interrupt.o
  .debug_frame   0x00000000       0x74 src/ASF/sam0/drivers/system/interrupt/system_interrupt.o
  .ARM.attributes
@@ -12089,7 +12089,7 @@ Discarded input sections
  .debug_macro   0x00000000     0x16e3 src/ASF/sam0/utils/cmsis/samd21/source/system_samd21.o
  .debug_macro   0x00000000       0x6d src/ASF/sam0/utils/cmsis/samd21/source/system_samd21.o
  .debug_line    0x00000000      0x602 src/ASF/sam0/utils/cmsis/samd21/source/system_samd21.o
- .debug_str     0x00000000    0x6a1e6 src/ASF/sam0/utils/cmsis/samd21/source/system_samd21.o
+ .debug_str     0x00000000    0x6a1f7 src/ASF/sam0/utils/cmsis/samd21/source/system_samd21.o
  .comment       0x00000000       0x5a src/ASF/sam0/utils/cmsis/samd21/source/system_samd21.o
  .debug_frame   0x00000000       0x30 src/ASF/sam0/utils/cmsis/samd21/source/system_samd21.o
  .ARM.attributes
@@ -14005,7 +14005,7 @@ Discarded input sections
  .debug_macro   0x00000000       0x16 src/ASF/thirdparty/pahomqtt/MQTTPacket/MQTTConnectServer.o
  .debug_macro   0x00000000       0x35 src/ASF/thirdparty/pahomqtt/MQTTPacket/MQTTConnectServer.o
  .debug_line    0x00000000      0x4bb src/ASF/thirdparty/pahomqtt/MQTTPacket/MQTTConnectServer.o
- .debug_str     0x00000000     0x723c src/ASF/thirdparty/pahomqtt/MQTTPacket/MQTTConnectServer.o
+ .debug_str     0x00000000     0x724d src/ASF/thirdparty/pahomqtt/MQTTPacket/MQTTConnectServer.o
  .comment       0x00000000       0x5a src/ASF/thirdparty/pahomqtt/MQTTPacket/MQTTConnectServer.o
  .debug_frame   0x00000000       0x68 src/ASF/thirdparty/pahomqtt/MQTTPacket/MQTTConnectServer.o
  .ARM.attributes
@@ -14196,7 +14196,7 @@ Discarded input sections
  .debug_macro   0x00000000       0x16 src/ASF/thirdparty/pahomqtt/MQTTPacket/MQTTFormat.o
  .debug_macro   0x00000000       0x35 src/ASF/thirdparty/pahomqtt/MQTTPacket/MQTTFormat.o
  .debug_line    0x00000000      0x4f5 src/ASF/thirdparty/pahomqtt/MQTTPacket/MQTTFormat.o
- .debug_str     0x00000000     0x731a src/ASF/thirdparty/pahomqtt/MQTTPacket/MQTTFormat.o
+ .debug_str     0x00000000     0x732b src/ASF/thirdparty/pahomqtt/MQTTPacket/MQTTFormat.o
  .comment       0x00000000       0x5a src/ASF/thirdparty/pahomqtt/MQTTPacket/MQTTFormat.o
  .debug_frame   0x00000000      0x13c src/ASF/thirdparty/pahomqtt/MQTTPacket/MQTTFormat.o
  .ARM.attributes
@@ -14493,7 +14493,7 @@ Discarded input sections
  .debug_macro   0x00000000       0x16 src/ASF/thirdparty/pahomqtt/MQTTPacket/MQTTSubscribeServer.o
  .debug_macro   0x00000000       0x35 src/ASF/thirdparty/pahomqtt/MQTTPacket/MQTTSubscribeServer.o
  .debug_line    0x00000000      0x448 src/ASF/thirdparty/pahomqtt/MQTTPacket/MQTTSubscribeServer.o
- .debug_str     0x00000000     0x7108 src/ASF/thirdparty/pahomqtt/MQTTPacket/MQTTSubscribeServer.o
+ .debug_str     0x00000000     0x7119 src/ASF/thirdparty/pahomqtt/MQTTPacket/MQTTSubscribeServer.o
  .comment       0x00000000       0x5a src/ASF/thirdparty/pahomqtt/MQTTPacket/MQTTSubscribeServer.o
  .debug_frame   0x00000000       0x64 src/ASF/thirdparty/pahomqtt/MQTTPacket/MQTTSubscribeServer.o
  .ARM.attributes
@@ -14579,7 +14579,7 @@ Discarded input sections
  .debug_macro   0x00000000       0x16 src/ASF/thirdparty/pahomqtt/MQTTPacket/MQTTUnsubscribeClient.o
  .debug_macro   0x00000000       0x35 src/ASF/thirdparty/pahomqtt/MQTTPacket/MQTTUnsubscribeClient.o
  .debug_line    0x00000000      0x455 src/ASF/thirdparty/pahomqtt/MQTTPacket/MQTTUnsubscribeClient.o
- .debug_str     0x00000000     0x7103 src/ASF/thirdparty/pahomqtt/MQTTPacket/MQTTUnsubscribeClient.o
+ .debug_str     0x00000000     0x7114 src/ASF/thirdparty/pahomqtt/MQTTPacket/MQTTUnsubscribeClient.o
  .comment       0x00000000       0x5a src/ASF/thirdparty/pahomqtt/MQTTPacket/MQTTUnsubscribeClient.o
  .debug_frame   0x00000000       0x78 src/ASF/thirdparty/pahomqtt/MQTTPacket/MQTTUnsubscribeClient.o
  .ARM.attributes
@@ -14663,7 +14663,7 @@ Discarded input sections
  .debug_macro   0x00000000       0x16 src/ASF/thirdparty/pahomqtt/MQTTPacket/MQTTUnsubscribeServer.o
  .debug_macro   0x00000000       0x35 src/ASF/thirdparty/pahomqtt/MQTTPacket/MQTTUnsubscribeServer.o
  .debug_line    0x00000000      0x434 src/ASF/thirdparty/pahomqtt/MQTTPacket/MQTTUnsubscribeServer.o
- .debug_str     0x00000000     0x70f4 src/ASF/thirdparty/pahomqtt/MQTTPacket/MQTTUnsubscribeServer.o
+ .debug_str     0x00000000     0x7105 src/ASF/thirdparty/pahomqtt/MQTTPacket/MQTTUnsubscribeServer.o
  .comment       0x00000000       0x5a src/ASF/thirdparty/pahomqtt/MQTTPacket/MQTTUnsubscribeServer.o
  .debug_frame   0x00000000       0x4c src/ASF/thirdparty/pahomqtt/MQTTPacket/MQTTUnsubscribeServer.o
  .ARM.attributes
@@ -18857,121 +18857,121 @@ OUTPUT(SAMW25_HTTP_AND_MQTT_STARTER_CODE.elf elf32-littlearm)
  .debug_line    0x00027b5d     0x1140 src/iot/sw_timer.o
  .debug_line    0x00028c9d     0x1762 src/main21.o
 
-.debug_str      0x00000000    0xa089b
- .debug_str     0x00000000     0x64de src/SerialConsole/circular_buffer.o
-                               0x67a0 (size before relaxing)
- .debug_str     0x000064de    0x80f55 src/SerialConsole/SerialConsole.o
-                              0x87de3 (size before relaxing)
- .debug_str     0x00087433     0x54c4 src/ASF/common2/components/memory/sd_mmc/sd_mmc.o
-                              0x8b95d (size before relaxing)
- .debug_str     0x0008c8f7      0x18a src/ASF/common2/components/memory/sd_mmc/sd_mmc_mem.o
-                              0x83768 (size before relaxing)
- .debug_str     0x0008ca81      0x87d src/ASF/common2/components/memory/sd_mmc/sd_mmc_spi.o
-                              0x8c733 (size before relaxing)
- .debug_str     0x0008d2fe       0x7d src/ASF/common2/services/delay/sam0/systick_counter.o
-                              0x80089 (size before relaxing)
- .debug_str     0x0008d37b     0x18bf src/ASF/common/components/wifi/winc1500/bsp/source/nm_bsp_samd21.o
-                              0x8807a (size before relaxing)
- .debug_str     0x0008ec3a      0x313 src/ASF/common/components/wifi/winc1500/bus_wrapper/source/nm_bus_wrapper_samd21.o
-                              0x89516 (size before relaxing)
- .debug_str     0x0008ef4d       0xf2 src/ASF/common/components/wifi/winc1500/common/source/nm_common.o
-                              0x83cd4 (size before relaxing)
- .debug_str     0x0008f03f     0x1c21 src/ASF/common/components/wifi/winc1500/driver/source/m2m_hif.o
-                              0x85a19 (size before relaxing)
- .debug_str     0x00090c60     0x1ce5 src/ASF/common/components/wifi/winc1500/driver/source/m2m_wifi.o
-                              0x8735d (size before relaxing)
- .debug_str     0x00092945      0x38b src/ASF/common/components/wifi/winc1500/driver/source/nmasic.o
-                              0x85991 (size before relaxing)
- .debug_str     0x00092cd0      0x168 src/ASF/common/components/wifi/winc1500/driver/source/nmbus.o
-                              0x83f0e (size before relaxing)
- .debug_str     0x00092e38       0xdd src/ASF/common/components/wifi/winc1500/driver/source/nmdrv.o
-                              0x85830 (size before relaxing)
- .debug_str     0x00092f15      0x53c src/ASF/common/components/wifi/winc1500/driver/source/nmspi.o
-                              0x8447c (size before relaxing)
- .debug_str     0x00093451     0x1d1f src/ASF/common/components/wifi/winc1500/socket/source/socket.o
-                              0x86e92 (size before relaxing)
- .debug_str     0x00095170      0x488 src/ASF/common/components/wifi/winc1500/spi_flash/source/spi_flash.o
-                              0x847b6 (size before relaxing)
- .debug_str     0x000955f8      0x239 src/ASF/common/services/storage/ctrl_access/ctrl_access.o
-                              0x83378 (size before relaxing)
- .debug_str     0x00095831       0x81 src/ASF/common/utils/interrupt/interrupt_sam_nvic.o
-                              0x7fe79 (size before relaxing)
- .debug_str     0x000958b2       0x4a src/ASF/sam0/boards/samw25_xplained_pro/board_init.o
-                              0x829d9 (size before relaxing)
- .debug_str     0x000958fc      0x418 src/ASF/sam0/drivers/extint/extint_callback.o
-                              0x806bc (size before relaxing)
- .debug_str     0x00095d14      0x63d src/ASF/sam0/drivers/extint/extint_sam_d_r_h/extint.o
-                              0x8169e (size before relaxing)
- .debug_str     0x00096351       0x59 src/ASF/sam0/drivers/port/port.o
-                              0x802a5 (size before relaxing)
- .debug_str     0x000963aa      0x84c src/ASF/sam0/drivers/rtc/rtc_sam_d_r_h/rtc_calendar.o
-                              0x82692 (size before relaxing)
- .debug_str     0x00096bf6       0xf5 src/ASF/sam0/drivers/rtc/rtc_sam_d_r_h/rtc_calendar_interrupt.o
-                              0x81956 (size before relaxing)
- .debug_str     0x00096ceb      0x3a9 src/ASF/sam0/drivers/sercom/sercom.o
-                              0x8155a (size before relaxing)
- .debug_str     0x00097094      0x16c src/ASF/sam0/drivers/sercom/sercom_interrupt.o
-                              0x813bd (size before relaxing)
- .debug_str     0x00097200      0x38b src/ASF/sam0/drivers/sercom/spi/spi.o
-                              0x8284c (size before relaxing)
- .debug_str     0x0009758b      0x210 src/ASF/sam0/drivers/sercom/spi/spi_interrupt.o
-                              0x81808 (size before relaxing)
- .debug_str     0x0009779b       0x8f src/ASF/sam0/drivers/sercom/usart/usart.o
-                              0x82325 (size before relaxing)
- .debug_str     0x0009782a      0x120 src/ASF/sam0/drivers/sercom/usart/usart_interrupt.o
+.debug_str      0x00000000    0xa08ac
+ .debug_str     0x00000000     0x64ef src/SerialConsole/circular_buffer.o
+                               0x67b1 (size before relaxing)
+ .debug_str     0x000064ef    0x80f55 src/SerialConsole/SerialConsole.o
+                              0x87df4 (size before relaxing)
+ .debug_str     0x00087444     0x54c4 src/ASF/common2/components/memory/sd_mmc/sd_mmc.o
+                              0x8b96e (size before relaxing)
+ .debug_str     0x0008c908      0x18a src/ASF/common2/components/memory/sd_mmc/sd_mmc_mem.o
+                              0x83779 (size before relaxing)
+ .debug_str     0x0008ca92      0x87d src/ASF/common2/components/memory/sd_mmc/sd_mmc_spi.o
+                              0x8c744 (size before relaxing)
+ .debug_str     0x0008d30f       0x7d src/ASF/common2/services/delay/sam0/systick_counter.o
+                              0x8009a (size before relaxing)
+ .debug_str     0x0008d38c     0x18bf src/ASF/common/components/wifi/winc1500/bsp/source/nm_bsp_samd21.o
+                              0x8808b (size before relaxing)
+ .debug_str     0x0008ec4b      0x313 src/ASF/common/components/wifi/winc1500/bus_wrapper/source/nm_bus_wrapper_samd21.o
+                              0x89527 (size before relaxing)
+ .debug_str     0x0008ef5e       0xf2 src/ASF/common/components/wifi/winc1500/common/source/nm_common.o
+                              0x83ce5 (size before relaxing)
+ .debug_str     0x0008f050     0x1c21 src/ASF/common/components/wifi/winc1500/driver/source/m2m_hif.o
+                              0x85a2a (size before relaxing)
+ .debug_str     0x00090c71     0x1ce5 src/ASF/common/components/wifi/winc1500/driver/source/m2m_wifi.o
+                              0x8736e (size before relaxing)
+ .debug_str     0x00092956      0x38b src/ASF/common/components/wifi/winc1500/driver/source/nmasic.o
+                              0x859a2 (size before relaxing)
+ .debug_str     0x00092ce1      0x168 src/ASF/common/components/wifi/winc1500/driver/source/nmbus.o
+                              0x83f1f (size before relaxing)
+ .debug_str     0x00092e49       0xdd src/ASF/common/components/wifi/winc1500/driver/source/nmdrv.o
+                              0x85841 (size before relaxing)
+ .debug_str     0x00092f26      0x53c src/ASF/common/components/wifi/winc1500/driver/source/nmspi.o
+                              0x8448d (size before relaxing)
+ .debug_str     0x00093462     0x1d1f src/ASF/common/components/wifi/winc1500/socket/source/socket.o
+                              0x86ea3 (size before relaxing)
+ .debug_str     0x00095181      0x488 src/ASF/common/components/wifi/winc1500/spi_flash/source/spi_flash.o
+                              0x847c7 (size before relaxing)
+ .debug_str     0x00095609      0x239 src/ASF/common/services/storage/ctrl_access/ctrl_access.o
+                              0x83389 (size before relaxing)
+ .debug_str     0x00095842       0x81 src/ASF/common/utils/interrupt/interrupt_sam_nvic.o
+                              0x7fe8a (size before relaxing)
+ .debug_str     0x000958c3       0x4a src/ASF/sam0/boards/samw25_xplained_pro/board_init.o
+                              0x829ea (size before relaxing)
+ .debug_str     0x0009590d      0x418 src/ASF/sam0/drivers/extint/extint_callback.o
+                              0x806cd (size before relaxing)
+ .debug_str     0x00095d25      0x63d src/ASF/sam0/drivers/extint/extint_sam_d_r_h/extint.o
+                              0x816af (size before relaxing)
+ .debug_str     0x00096362       0x59 src/ASF/sam0/drivers/port/port.o
+                              0x802b6 (size before relaxing)
+ .debug_str     0x000963bb      0x84c src/ASF/sam0/drivers/rtc/rtc_sam_d_r_h/rtc_calendar.o
+                              0x826a3 (size before relaxing)
+ .debug_str     0x00096c07       0xf5 src/ASF/sam0/drivers/rtc/rtc_sam_d_r_h/rtc_calendar_interrupt.o
+                              0x81967 (size before relaxing)
+ .debug_str     0x00096cfc      0x3a9 src/ASF/sam0/drivers/sercom/sercom.o
                               0x8156b (size before relaxing)
- .debug_str     0x0009794a     0x17c8 src/ASF/sam0/drivers/system/clock/clock_samd21_r21_da_ha1/clock.o
-                              0x830d0 (size before relaxing)
- .debug_str     0x00099112      0x1c2 src/ASF/sam0/drivers/system/clock/clock_samd21_r21_da_ha1/gclk.o
-                              0x80b3c (size before relaxing)
- .debug_str     0x000992d4      0x179 src/ASF/sam0/drivers/system/pinmux/pinmux.o
-                              0x8031b (size before relaxing)
- .debug_str     0x0009944d       0x47 src/ASF/sam0/drivers/system/system.o
-                              0x7ff56 (size before relaxing)
- .debug_str     0x00099494     0x20d6 src/ASF/sam0/drivers/tcc/tcc.o
-                              0x83347 (size before relaxing)
- .debug_str     0x0009b56a      0x1a2 src/ASF/sam0/drivers/tcc/tcc_callback.o
-                              0x817ee (size before relaxing)
- .debug_str     0x0009b70c      0xf09 src/ASF/sam0/utils/cmsis/samd21/source/gcc/startup_samd21.o
-                              0x6b35f (size before relaxing)
- .debug_str     0x0009c615       0x2a src/ASF/sam0/utils/stdio/read.o
-                              0x7fe20 (size before relaxing)
- .debug_str     0x0009c63f       0x24 src/ASF/sam0/utils/stdio/write.o
-                              0x7fe21 (size before relaxing)
- .debug_str     0x0009c663      0x681 src/ASF/sam0/utils/syscalls/gcc/syscalls.o
-                               0x741b (size before relaxing)
- .debug_str     0x0009cce4      0x1c3 src/ASF/thirdparty/fatfs/fatfs-port-r0.09/diskio.o
-                              0x85091 (size before relaxing)
- .debug_str     0x0009cea7       0x61 src/ASF/thirdparty/fatfs/fatfs-port-r0.09/sam0/fattime_rtc.o
-                              0x815df (size before relaxing)
- .debug_str     0x0009cf08      0xd47 src/ASF/thirdparty/fatfs/fatfs-r0.09/src/ff.o
-                               0x3c65 (size before relaxing)
- .debug_str     0x0009dc4f       0x5a src/ASF/thirdparty/fatfs/fatfs-r0.09/src/option/ccsbcs.o
-                               0x2bd2 (size before relaxing)
- .debug_str     0x0009dca9      0x97a src/ASF/thirdparty/pahomqtt/MQTTClient/MQTTClient.o
-                              0x866cf (size before relaxing)
- .debug_str     0x0009e623      0x43b src/ASF/thirdparty/pahomqtt/MQTTClient/Platforms/MCHP_ATWx.o
-                              0x868cf (size before relaxing)
- .debug_str     0x0009ea5e      0x2da src/ASF/thirdparty/pahomqtt/MQTTClient/Wrapper/mqtt.o
-                              0x868e5 (size before relaxing)
- .debug_str     0x0009ed38      0x141 src/ASF/thirdparty/pahomqtt/MQTTPacket/MQTTConnectClient.o
-                               0x726e (size before relaxing)
- .debug_str     0x0009ee79       0x78 src/ASF/thirdparty/pahomqtt/MQTTPacket/MQTTDeserializePublish.o
-                               0x70a7 (size before relaxing)
- .debug_str     0x0009eef1      0x11b src/ASF/thirdparty/pahomqtt/MQTTPacket/MQTTPacket.o
-                               0x718a (size before relaxing)
- .debug_str     0x0009f00c       0x9d src/ASF/thirdparty/pahomqtt/MQTTPacket/MQTTSerializePublish.o
-                               0x7144 (size before relaxing)
- .debug_str     0x0009f0a9       0x8e src/ASF/thirdparty/pahomqtt/MQTTPacket/MQTTSubscribeClient.o
-                               0x7146 (size before relaxing)
- .debug_str     0x0009f137      0xe4e src/iot/http/http_client.o
-                              0x8b433 (size before relaxing)
- .debug_str     0x0009ff85       0x9b src/iot/stream_writer.o
-                              0x85e65 (size before relaxing)
- .debug_str     0x000a0020      0x10e src/iot/sw_timer.o
-                              0x87a1d (size before relaxing)
- .debug_str     0x000a012e      0x76d src/main21.o
-                              0x8da68 (size before relaxing)
+ .debug_str     0x000970a5      0x16c src/ASF/sam0/drivers/sercom/sercom_interrupt.o
+                              0x813ce (size before relaxing)
+ .debug_str     0x00097211      0x38b src/ASF/sam0/drivers/sercom/spi/spi.o
+                              0x8285d (size before relaxing)
+ .debug_str     0x0009759c      0x210 src/ASF/sam0/drivers/sercom/spi/spi_interrupt.o
+                              0x81819 (size before relaxing)
+ .debug_str     0x000977ac       0x8f src/ASF/sam0/drivers/sercom/usart/usart.o
+                              0x82336 (size before relaxing)
+ .debug_str     0x0009783b      0x120 src/ASF/sam0/drivers/sercom/usart/usart_interrupt.o
+                              0x8157c (size before relaxing)
+ .debug_str     0x0009795b     0x17c8 src/ASF/sam0/drivers/system/clock/clock_samd21_r21_da_ha1/clock.o
+                              0x830e1 (size before relaxing)
+ .debug_str     0x00099123      0x1c2 src/ASF/sam0/drivers/system/clock/clock_samd21_r21_da_ha1/gclk.o
+                              0x80b4d (size before relaxing)
+ .debug_str     0x000992e5      0x179 src/ASF/sam0/drivers/system/pinmux/pinmux.o
+                              0x8032c (size before relaxing)
+ .debug_str     0x0009945e       0x47 src/ASF/sam0/drivers/system/system.o
+                              0x7ff67 (size before relaxing)
+ .debug_str     0x000994a5     0x20d6 src/ASF/sam0/drivers/tcc/tcc.o
+                              0x83358 (size before relaxing)
+ .debug_str     0x0009b57b      0x1a2 src/ASF/sam0/drivers/tcc/tcc_callback.o
+                              0x817ff (size before relaxing)
+ .debug_str     0x0009b71d      0xf09 src/ASF/sam0/utils/cmsis/samd21/source/gcc/startup_samd21.o
+                              0x6b370 (size before relaxing)
+ .debug_str     0x0009c626       0x2a src/ASF/sam0/utils/stdio/read.o
+                              0x7fe31 (size before relaxing)
+ .debug_str     0x0009c650       0x24 src/ASF/sam0/utils/stdio/write.o
+                              0x7fe32 (size before relaxing)
+ .debug_str     0x0009c674      0x681 src/ASF/sam0/utils/syscalls/gcc/syscalls.o
+                               0x742c (size before relaxing)
+ .debug_str     0x0009ccf5      0x1c3 src/ASF/thirdparty/fatfs/fatfs-port-r0.09/diskio.o
+                              0x850a2 (size before relaxing)
+ .debug_str     0x0009ceb8       0x61 src/ASF/thirdparty/fatfs/fatfs-port-r0.09/sam0/fattime_rtc.o
+                              0x815f0 (size before relaxing)
+ .debug_str     0x0009cf19      0xd47 src/ASF/thirdparty/fatfs/fatfs-r0.09/src/ff.o
+                               0x3c76 (size before relaxing)
+ .debug_str     0x0009dc60       0x5a src/ASF/thirdparty/fatfs/fatfs-r0.09/src/option/ccsbcs.o
+                               0x2be3 (size before relaxing)
+ .debug_str     0x0009dcba      0x97a src/ASF/thirdparty/pahomqtt/MQTTClient/MQTTClient.o
+                              0x866e0 (size before relaxing)
+ .debug_str     0x0009e634      0x43b src/ASF/thirdparty/pahomqtt/MQTTClient/Platforms/MCHP_ATWx.o
+                              0x868e0 (size before relaxing)
+ .debug_str     0x0009ea6f      0x2da src/ASF/thirdparty/pahomqtt/MQTTClient/Wrapper/mqtt.o
+                              0x868f6 (size before relaxing)
+ .debug_str     0x0009ed49      0x141 src/ASF/thirdparty/pahomqtt/MQTTPacket/MQTTConnectClient.o
+                               0x727f (size before relaxing)
+ .debug_str     0x0009ee8a       0x78 src/ASF/thirdparty/pahomqtt/MQTTPacket/MQTTDeserializePublish.o
+                               0x70b8 (size before relaxing)
+ .debug_str     0x0009ef02      0x11b src/ASF/thirdparty/pahomqtt/MQTTPacket/MQTTPacket.o
+                               0x719b (size before relaxing)
+ .debug_str     0x0009f01d       0x9d src/ASF/thirdparty/pahomqtt/MQTTPacket/MQTTSerializePublish.o
+                               0x7155 (size before relaxing)
+ .debug_str     0x0009f0ba       0x8e src/ASF/thirdparty/pahomqtt/MQTTPacket/MQTTSubscribeClient.o
+                               0x7157 (size before relaxing)
+ .debug_str     0x0009f148      0xe4e src/iot/http/http_client.o
+                              0x8b444 (size before relaxing)
+ .debug_str     0x0009ff96       0x9b src/iot/stream_writer.o
+                              0x85e76 (size before relaxing)
+ .debug_str     0x000a0031      0x10e src/iot/sw_timer.o
+                              0x87a2e (size before relaxing)
+ .debug_str     0x000a013f      0x76d src/main21.o
+                              0x8da79 (size before relaxing)
 
 .debug_frame    0x00000000     0x4f98
  .debug_frame   0x00000000       0xf8 src/SerialConsole/circular_buffer.o
