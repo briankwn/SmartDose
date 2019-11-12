@@ -990,22 +990,32 @@ int main(void)
 
 	printf("main: done.\r\n");
 
-
-	//Disable socket for HTTP Transfer
-	socketDeinit();
-	http_client_deinit(&http_client_module_inst);
-	delay_s(1);
 	
-	configure_http_client();
+	//Disable socket for HTTP Transfer
+	//socketDeinit();
+	//http_client_deinit(&http_client_module_inst);
+	//nm_bsp_deinit();
+	//delay_s(1);
+	
+
+
+	//configure_http_client();
+
+	//reinitialize state
+	init_state();
+	add_state(WIFI_CONNECTED);
+	add_state(STORAGE_READY);
+
 	second_file = 1;
 	//DOWNLOAD ANOTHER FILE
 	do_download_flag = true;
-
+	//nm_bsp_init();
 	/* Initialize socket module. */
-	socketInit();
+	//socketInit();
 	/* Register socket callback function. */
-	registerSocketCallback(socket_cb, resolve_cb);
+	//registerSocketCallback(socket_cb, resolve_cb);
 
+	start_download();
 
 	/* Connect to router. */
 	//printf("main: connecting to WiFi AP %s...\r\n", (char *)MAIN_WLAN_SSID);
@@ -1016,14 +1026,13 @@ int main(void)
 		m2m_wifi_handle_events(NULL);
 		/* Checks the timer timeout. */
 		sw_timer_task(&swt_module_inst);
-	}
+	}	
 
 	printf("main: please unplug the SD/MMC card.\r\n");
 	printf("main: done.\r\n");
 	
 	//Disable socket for HTTP Transfer
 	socketDeinit();
-
 
 	delay_s(1);
 	//CONNECT TO MQTT BROKER
