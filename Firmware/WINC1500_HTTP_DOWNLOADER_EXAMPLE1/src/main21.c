@@ -372,7 +372,7 @@ static void store_file_packet(char *data, uint32_t length)
 			return;
 		}
 
-		rename_to_unique(&file_object, save_file_name, MAIN_MAX_FILE_NAME_LENGTH);
+		f_open(&file_object, save_file_name, MAIN_MAX_FILE_NAME_LENGTH);
 		printf("store_file_packet: creating file [%s]\r\n", save_file_name);
 		ret = f_open(&file_object, (char const *)save_file_name, FA_CREATE_ALWAYS | FA_WRITE);
 		if (ret != FR_OK) {
@@ -684,6 +684,9 @@ static void configure_http_client(void)
 	int ret;
 
 	http_client_get_config_defaults(&httpc_conf);
+	//teseting with https cause why not : )
+	httpc_conf.port = 443;
+	httpc_conf.tls = 1;
 
 	httpc_conf.recv_buffer_size = MAIN_BUFFER_MAX_SIZE;
 	httpc_conf.timer_inst = &swt_module_inst;
@@ -697,9 +700,6 @@ static void configure_http_client(void)
 
 	http_client_register_callback(&http_client_module_inst, http_client_callback);
 }
-
-
-
 
 
 /*MQTT RELATED STATIC FUNCTIONS*/
@@ -905,7 +905,62 @@ void extint_detection_callback(void)
 }
 
 
+static void otafu(void){
 
+	do_download_flag = true;
+	second_file = 0;
+	mqtt_deinit(&mqtt_inst);
+	//printf("deinit http %d \r\n",http_client_deinit(&http_client_module_inst));
+	socketDeinit();
+	delay_s(1);
+	//configure_http_client();
+	socketInit();
+	registerSocketCallback(socket_cb, resolve_cb);
+	
+	
+	//this might be worth it's own method 
+	init_state();
+	add_state(WIFI_CONNECTED);
+	add_state(STORAGE_READY);
+	//call start_download
+	start_download();
+
+	while (!(is_state_set(COMPLETED) || is_state_set(CANCELED))) {
+		/* Handle pending events from network controller. */
+		m2m_wifi_handle_events(NULL);
+		/* Checks the timer timeout. */
+		sw_timer_task(&swt_module_inst);
+	}
+
+	second_file = 1;
+
+	//this might be worth it's own method 
+	init_state();
+	add_state(WIFI_CONNECTED);
+	add_state(STORAGE_READY);
+	//call start_download
+	start_download();
+
+	while (!(is_state_set(COMPLETED) || is_state_set(CANCELED))) {
+		/* Handle pending events from network controller. */
+		m2m_wifi_handle_events(NULL);
+		/* Checks the timer timeout. */
+		sw_timer_task(&swt_module_inst);
+	}
+	printf("otafu: done.\r\n");
+	system_reset();
+	socketDeinit();
+	delay_s(1);
+	configure_mqtt();
+	socketInit();
+	registerSocketCallback(socket_event_handler, socket_resolve_handler);
+	if (mqtt_connect(&mqtt_inst, main_mqtt_broker))
+	{
+		printf("Error connecting to MQTT Broker!\r\n");
+	}
+	printf("otafu: done.\r\n");
+	
+}
 
 /**
  * \brief Main application function.
@@ -945,8 +1000,6 @@ int main(void)
 	/* Initialize the BSP. */
 	nm_bsp_init();
 
-
-
 	/*Initialize BUTTON 0 as an external interrupt*/
 	configure_extint_channel();
 	configure_extint_callbacks();
@@ -970,69 +1023,50 @@ int main(void)
 	}
 
 	//DOWNLOAD A FILE
-	do_download_flag = true;
+	do_download_flag = false; // might hold off on download for now
 
 	/* Initialize socket module. */
 	socketInit();
 	/* Register socket callback function. */
-	registerSocketCallback(socket_cb, resolve_cb);
+	registerSocketCallback(socket_event_handler, socket_resolve_handler);//registerSocketCallback(socket_cb, resolve_cb);
 
 	/* Connect to router. */
 	printf("main: connecting to WiFi AP %s...\r\n", (char *)MAIN_WLAN_SSID);
 	m2m_wifi_connect((char *)MAIN_WLAN_SSID, sizeof(MAIN_WLAN_SSID), MAIN_WLAN_AUTH, (char *)MAIN_WLAN_PSK, M2M_WIFI_CH_ALL);
 
-	while (!(is_state_set(COMPLETED) || is_state_set(CANCELED))) {
+	while (!( is_state_set(WIFI_CONNECTED)||is_state_set(COMPLETED) || is_state_set(CANCELED))) {
 		/* Handle pending events from network controller. */
 		m2m_wifi_handle_events(NULL);
 		/* Checks the timer timeout. */
 		sw_timer_task(&swt_module_inst);
 	}
+	
+	//temporarily not downloading before program, just downloading after
 
 	printf("main: done.\r\n");
 
-	
+	//second_file = 1;
+	////DOWNLOAD ANOTHER FILE
+//
+	////reinitialize state
+	//init_state();
+	//add_state(WIFI_CONNECTED);
+	//add_state(STORAGE_READY);
+	////call start_download
+	//start_download();
+	//
+	//while (!(is_state_set(COMPLETED) || is_state_set(CANCELED))) {
+		///* Handle pending events from network controller. */
+		//m2m_wifi_handle_events(NULL);
+		///* Checks the timer timeout. */
+		//sw_timer_task(&swt_module_inst);
+	//}	
+//
+	////printf("main: please unplug the SD/MMC card.\r\n");
+	//printf("main2: done.\r\n");
+
 	//Disable socket for HTTP Transfer
 	//socketDeinit();
-	//http_client_deinit(&http_client_module_inst);
-	//nm_bsp_deinit();
-	//delay_s(1);
-	
-
-
-	//configure_http_client();
-
-	//reinitialize state
-	init_state();
-	add_state(WIFI_CONNECTED);
-	add_state(STORAGE_READY);
-
-	second_file = 1;
-	//DOWNLOAD ANOTHER FILE
-	do_download_flag = true;
-	//nm_bsp_init();
-	/* Initialize socket module. */
-	//socketInit();
-	/* Register socket callback function. */
-	//registerSocketCallback(socket_cb, resolve_cb);
-
-	start_download();
-
-	/* Connect to router. */
-	//printf("main: connecting to WiFi AP %s...\r\n", (char *)MAIN_WLAN_SSID);
-	//m2m_wifi_connect((char *)MAIN_WLAN_SSID, sizeof(MAIN_WLAN_SSID), MAIN_WLAN_AUTH, (char *)MAIN_WLAN_PSK, M2M_WIFI_CH_ALL);
-
-	while (!(is_state_set(COMPLETED) || is_state_set(CANCELED))) {
-		/* Handle pending events from network controller. */
-		m2m_wifi_handle_events(NULL);
-		/* Checks the timer timeout. */
-		sw_timer_task(&swt_module_inst);
-	}	
-
-	printf("main: please unplug the SD/MMC card.\r\n");
-	printf("main: done.\r\n");
-	
-	//Disable socket for HTTP Transfer
-	socketDeinit();
 
 	delay_s(1);
 	//CONNECT TO MQTT BROKER
@@ -1040,28 +1074,27 @@ int main(void)
 	do_download_flag = false;
 	
 	//Re-enable socket for MQTT Transfer
-	socketInit();
-	registerSocketCallback(socket_event_handler, socket_resolve_handler);
+	//socketInit();
+	//registerSocketCallback(socket_event_handler, socket_resolve_handler);
 
 		/* Connect to router. */
-	
-	if (mqtt_connect(&mqtt_inst, main_mqtt_broker))
-	{
-		printf("Error connecting to MQTT Broker!\r\n");
-	}
-	
+	printf("check3\r\n");
+	//if (mqtt_connect(&mqtt_inst, main_mqtt_broker))
+	//{
+	//	printf("Error connecting to MQTT Broker!\r\n");
+	//}
+	printf("check4\r\n");
 
 
 	while (1) {
-
 	/* Handle pending events from network controller. */
 		m2m_wifi_handle_events(NULL);
 		sw_timer_task(&swt_module_inst);
-
 		if(isPressed)
 		{
 			//Publish updated temperature data
 			mqtt_publish(&mqtt_inst, TEMPERATURE_TOPIC, mqtt_msg, strlen(mqtt_msg), 2, 0);
+			otafu();
 			isPressed = false;
 		}
 

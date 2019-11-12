@@ -39,9 +39,9 @@ extern "C" {
 #endif
 
 /** Wi-Fi AP Settings. */
-#define MAIN_WLAN_SSID                       "Foooooon"//"AirPennNet-Device" /**< Destination SSID */
+#define MAIN_WLAN_SSID                       "AirPennNet-Device" //"Foooooon"///**< Destination SSID */
 #define MAIN_WLAN_AUTH                       M2M_WIFI_SEC_WPA_PSK /**< Security manner */
-#define MAIN_WLAN_PSK                        "ofob2omy1mxgw"//"penn1740wifi" /**< Password for Destination SSID */
+#define MAIN_WLAN_PSK                        "penn1740wifi"//"ofob2omy1mxgw"// /**< Password for Destination SSID */
 
 /** IP address parsing. */
 #define IPV4_BYTE(val, index)                ((val >> (index * 8)) & 0xFF)
@@ -103,6 +103,8 @@ typedef enum {
  * m2m.eclipse.org is public MQTT broker.
  */
 static const char main_mqtt_broker[] = "m16.cloudmqtt.com";
+
+static void otafu(void);
 
 
 
