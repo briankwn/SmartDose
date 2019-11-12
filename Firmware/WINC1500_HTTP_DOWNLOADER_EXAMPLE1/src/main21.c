@@ -971,7 +971,7 @@ int main(void)
 
 	//DOWNLOAD A FILE
 	do_download_flag = true;
-	//configure_http_client();
+
 	/* Initialize socket module. */
 	socketInit();
 	/* Register socket callback function. */
@@ -993,9 +993,10 @@ int main(void)
 
 	//Disable socket for HTTP Transfer
 	socketDeinit();
-	
+	http_client_deinit(&http_client_module_inst);
 	delay_s(1);
 	
+	configure_http_client();
 	second_file = 1;
 	//DOWNLOAD ANOTHER FILE
 	do_download_flag = true;
