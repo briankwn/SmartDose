@@ -122,7 +122,7 @@
 volatile char mqtt_msg [64]= "{\"d\":{\"temp\":17}}\"";
 volatile uint32_t temperature = 1;
 
-
+uint8_t second_file = 0;
 
 
 #define STRING_EOL                      "\r\n"
@@ -328,7 +328,12 @@ static void start_download(void)
 
 	/* Send the HTTP request. */
 	printf("start_download: sending HTTP request...\r\n");
-	http_client_send_request(&http_client_module_inst, MAIN_HTTP_FILE_URL, HTTP_METHOD_GET, NULL, NULL);
+	if(second_file == 0){
+		http_client_send_request(&http_client_module_inst, MAIN_HTTP_FILE_URL, HTTP_METHOD_GET, NULL, NULL);
+	}
+	else{
+		http_client_send_request(&http_client_module_inst, PARAMS_HTTP_FILE_URL, HTTP_METHOD_GET, NULL, NULL);
+	}
 }
 
 /**
@@ -348,7 +353,13 @@ static void store_file_packet(char *data, uint32_t length)
 		char *cp = NULL;
 		save_file_name[0] = LUN_ID_SD_MMC_0_MEM + '0';
 		save_file_name[1] = ':';
-		cp = (char *)(MAIN_HTTP_FILE_URL + strlen(MAIN_HTTP_FILE_URL));
+		if(second_file == 0){
+			cp = (char *)(MAIN_HTTP_FILE_URL + strlen(MAIN_HTTP_FILE_URL));
+		}
+		else{
+			cp = (char *)(PARAMS_HTTP_FILE_URL + strlen(PARAMS_HTTP_FILE_URL));
+		}
+
 		while (*cp != '/') {
 			cp--;
 		}
@@ -606,18 +617,6 @@ static void init_storage(void)
 		/* Wait card present and ready. */
 		do {
 			status = sd_mmc_test_unit_ready(0);
-			/*
-			if (CTRL_FAIL == status){
-				printf("fail \r\n");
-			}
-			if(CTRL_NO_PRESENT == status){
-				printf("no present \r\n");
-			}
-			if (CTRL_BUSY == status){
-				printf("busy \r\n");
-			}
-			*/
-			
 			if (CTRL_FAIL == status) {
 				printf("init_storage: SD Card install failed.\r\n");
 				printf("init_storage: try unplug and re-plug the card.\r\n");
@@ -937,8 +936,6 @@ int main(void)
 	/* Initialize the Timer. */
 	configure_timer();
 
-
-
 	/* Initialize the HTTP client service. */
 	configure_http_client();
 
@@ -974,7 +971,7 @@ int main(void)
 
 	//DOWNLOAD A FILE
 	do_download_flag = true;
-
+	//configure_http_client();
 	/* Initialize socket module. */
 	socketInit();
 	/* Register socket callback function. */
@@ -990,10 +987,39 @@ int main(void)
 		/* Checks the timer timeout. */
 		sw_timer_task(&swt_module_inst);
 	}
-	printf("main: please unplug the SD/MMC card.\r\n");
+
 	printf("main: done.\r\n");
 
 
+	//Disable socket for HTTP Transfer
+	socketDeinit();
+	
+	delay_s(1);
+	
+	second_file = 1;
+	//DOWNLOAD ANOTHER FILE
+	do_download_flag = true;
+
+	/* Initialize socket module. */
+	socketInit();
+	/* Register socket callback function. */
+	registerSocketCallback(socket_cb, resolve_cb);
+
+
+	/* Connect to router. */
+	//printf("main: connecting to WiFi AP %s...\r\n", (char *)MAIN_WLAN_SSID);
+	//m2m_wifi_connect((char *)MAIN_WLAN_SSID, sizeof(MAIN_WLAN_SSID), MAIN_WLAN_AUTH, (char *)MAIN_WLAN_PSK, M2M_WIFI_CH_ALL);
+
+	while (!(is_state_set(COMPLETED) || is_state_set(CANCELED))) {
+		/* Handle pending events from network controller. */
+		m2m_wifi_handle_events(NULL);
+		/* Checks the timer timeout. */
+		sw_timer_task(&swt_module_inst);
+	}
+
+	printf("main: please unplug the SD/MMC card.\r\n");
+	printf("main: done.\r\n");
+	
 	//Disable socket for HTTP Transfer
 	socketDeinit();
 
@@ -1002,7 +1028,7 @@ int main(void)
 	//CONNECT TO MQTT BROKER
 
 	do_download_flag = false;
-
+	
 	//Re-enable socket for MQTT Transfer
 	socketInit();
 	registerSocketCallback(socket_event_handler, socket_resolve_handler);
@@ -1014,6 +1040,8 @@ int main(void)
 		printf("Error connecting to MQTT Broker!\r\n");
 	}
 	
+
+
 	while (1) {
 
 	/* Handle pending events from network controller. */

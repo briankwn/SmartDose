@@ -39,15 +39,16 @@ extern "C" {
 #endif
 
 /** Wi-Fi AP Settings. */
-#define MAIN_WLAN_SSID                       "Foooooon" /**< Destination SSID */
+#define MAIN_WLAN_SSID                       "AirPennNet-Device" /**< Destination SSID */
 #define MAIN_WLAN_AUTH                       M2M_WIFI_SEC_WPA_PSK /**< Security manner */
-#define MAIN_WLAN_PSK                        "ofob2omy1mxgw" /**< Password for Destination SSID */
+#define MAIN_WLAN_PSK                        "penn1740wifi" /**< Password for Destination SSID */
 
 /** IP address parsing. */
 #define IPV4_BYTE(val, index)                ((val >> (index * 8)) & 0xFF)
 
 /** Content URI for download. */
-#define MAIN_HTTP_FILE_URL                   "http://www.orimi.com/pdf-test.pdf"
+#define MAIN_HTTP_FILE_URL                  "https://www.seas.upenn.edu/~briankwn/SmartDoseFirmware/app.bin"
+#define PARAMS_HTTP_FILE_URL				"https://www.seas.upenn.edu/~briankwn/SmartDoseFirmware/params.csv"
 
 /** Maximum size for packet buffer. */
 #define MAIN_BUFFER_MAX_SIZE                 (1446)
