@@ -126,7 +126,7 @@ uint8_t second_file = 0;
 
 
 #define STRING_EOL                      "\r\n"
-#define STRING_HEADER                   "-- SMART DOSE APPLICATION --"STRING_EOL \
+#define STRING_HEADER                   "-- SMART DOSE APPLICATION -- VERSION A --"STRING_EOL \
 	"-- "BOARD_NAME " --"STRING_EOL	\
 	"-- Compiled: "__DATE__ " "__TIME__ " --"STRING_EOL
 
@@ -918,11 +918,12 @@ static void otafu(void){
 	mqtt_deinit(&mqtt_inst);
 	//printf("deinit http %d \r\n",http_client_deinit(&http_client_module_inst));
 	socketDeinit();
-	delay_s(1);
-	//configure_http_client();
-	socketInit();
-	registerSocketCallback(socket_cb, resolve_cb);
 	
+	//configure_http_client();
+	
+	registerSocketCallback(socket_cb, resolve_cb);
+	delay_s(1);
+	socketInit();
 	
 	//this might be worth it's own method 
 	init_state();
@@ -954,9 +955,18 @@ static void otafu(void){
 		sw_timer_task(&swt_module_inst);
 	}
 	printf("otafu: done.\r\n");
-	uint8_t result_crc= check_crc();	
+	uint8_t result_crc= check_crc();
 	
-	system_reset();
+	socketDeinit();
+	delay_s(3); //let the print buffer catch up before we reset
+	//system_reset();
+	configure_mqtt();
+	registerSocketCallback(socket_event_handler, socket_resolve_handler);
+	socketInit();
+	
+	mqtt_connect(&mqtt_inst, main_mqtt_broker);
+	
+	//
 }
 
 /**
@@ -969,12 +979,12 @@ static void otafu(void){
 **/
 uint8_t check_crc()
 {
+		
+	setLogLevel(LOG_INFO_LVL);
 	char firmware_file_name[] = "0:app.bin";
 	FIL firmware_file;
 	FRESULT res;
 	uint32_t page_size = 64;		//Number of bytes per page --//page size is 64 bytes
-	uint32_t total_pages = (firmware_file.fsize / page_size);
-	SerialConsoleWriteString("Checking \r\n");
 	char block[page_size];
 	uint32_t br;
 	crc32_t crc_calculated=0;
@@ -984,8 +994,10 @@ uint8_t check_crc()
 		LogMessage(LOG_INFO_LVL ,"[FAIL: Could not open Firmware File] res %d\r\n", res);
 		//set result to -1, file not read correctly
 	}
-	
-	for (uint32_t i = 0 ; i < (total_pages) ; i++)
+	uint32_t total_pages = firmware_file.fsize / page_size;
+	LogMessage(LOG_INFO_LVL ,"total_pages: %d\r\n", total_pages);
+	LogMessage(LOG_INFO_LVL ,"total_pages: %d\r\n", firmware_file.fsize / page_size);
+	for (uint32_t i = 0 ; i < total_pages ; i++)
 	{
 						
 		res = f_read (&firmware_file,block, page_size, &br);
@@ -996,7 +1008,7 @@ uint8_t check_crc()
 		res = crc32_recalculate(block,page_size,&crc_calculated);
 	}
 	
-	
+
 	// Calculate remainder
 	uint32_t remainder = (firmware_file.fsize % page_size);
 	res = f_read (&firmware_file,block, page_size, &br);
@@ -1007,6 +1019,8 @@ uint8_t check_crc()
 
 	res = crc32_recalculate(block,remainder,&crc_calculated);
 	
+	f_close(&firmware_file);
+	
 	char params_file_name[] = "params.csv";
 	FIL params_file;
 	
@@ -1015,7 +1029,7 @@ uint8_t check_crc()
 	if (res != FR_OK) {
 		LogMessage(LOG_INFO_LVL ,"[FAIL: Could not open params file] res %d\r\n", res);
 	}
-			
+
 	char params[50];
 	
 	res = f_read (&params_file,(char const *)params, 50, &br);
@@ -1024,8 +1038,9 @@ uint8_t check_crc()
 			
 	}
 	LogMessage(LOG_INFO_LVL ,"[Bytes read from params.csv: ] %d\r\n", br);
-			
+	
 	f_close(&params_file);
+	
 
 	char * flag = strtok(params, ",");
 	char * string_crc_from_file = strtok(NULL, ",");
@@ -1035,13 +1050,28 @@ uint8_t check_crc()
 	if(crc_calculated == crc_from_file)
 	{
 		LogMessage(LOG_INFO_LVL ,"[CRC Matches]\r\n");
+		f_close(&params_file);
 		return 1;
 	}
 	else
 	{	
-		LogMessage(LOG_INFO_LVL ,"[-10 for Griffindor]\r\n");
+		//set flag to 0 if crc doesn't match, we don't want to load this image. 
+		LogMessage(LOG_INFO_LVL ,"[Invalid CRC, re-download in next boot cycle. Resetting to current image.]\r\n");
+		params_file.fptr = 0;
+		res = f_read (&params_file,(char const *)params, 50, &br);
+		if (res != FR_OK) {
+			LogMessage(LOG_INFO_LVL ,"[FAIL: Could not read Parameters File] res %d\r\n", res);			
+		}
+		params_file.fptr = 0;
+		params[0] = "0";
+		res = f_write (&params_file,(char const *)params, 50, &br);
+		if (res != FR_OK) {
+			LogMessage(LOG_INFO_LVL ,"[FAIL: Could not read Parameters File] res %d\r\n", res);
+		}
+		f_close(&params_file);
 		return 0;
 	}
+	
 }
 
 
@@ -1161,12 +1191,10 @@ int main(void)
 	//registerSocketCallback(socket_event_handler, socket_resolve_handler);
 
 		/* Connect to router. */
-	printf("check3\r\n");
 	//if (mqtt_connect(&mqtt_inst, main_mqtt_broker))
 	//{
 	//	printf("Error connecting to MQTT Broker!\r\n");
 	//}
-	printf("check4\r\n");
 
 
 	while (1) {
