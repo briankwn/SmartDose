@@ -5,12 +5,12 @@
  *  Author: gsuveer
  */ 
 
-
-
+#include "cli.h"
+#include "main.h"
 /*
 COMMAND LINE INTERFACE COMMANDS
 */
-
+const char bkspc[3]={0x20 ,0x08}; //backspace for printing to terminal
 void ReadIntoBuffer(){
 	if(rxBuffRdy > 0){
 		if(SerialConsoleReadCharacter(&command[cmditer]) == 0){
@@ -106,9 +106,6 @@ void read_ir()
 	else SerialConsoleWriteString("false\r\n");
 }
 
-
-
-
 //create name to function struct
 struct cmdname{
 	const char *name;
@@ -129,6 +126,7 @@ struct cmdname commandarr[] =
 	{"start_buzzing" , start_buzzing},
 	{"stop_buzzing", stop_buzzing},
 	{"read_ir", read_ir},
+	{"pub_battery", pub_battery}	
 };
 enum {NUMOFCMDS = sizeof(commandarr)/sizeof(commandarr[0])};
 
@@ -150,6 +148,20 @@ void execConsoleCommand(char *name){
 			return;
 		}
 	}
-	
 	SerialConsoleWriteString("ERROR\r\n"); // if we get to here there's no match
+}
+
+
+void cli_init(struct mqtt_module *mqtt_inst_ref){
+	mqtt_instance = *mqtt_inst_ref;
+	cmditer=0; //location in read in command buffer
+	rxBuffRdy = 0;
+	strcpy(nameofdevice, "not yet set. Use setDeviceName"); //device name stored in RAM
+	inp = NULL; //pointer for input variable
+	
+}
+
+void pub_battery(){
+	volatile char mqtt_msg1 [64]= "{\"d\":{\"bat_level\":50}}";
+	mqtt_publish(&mqtt_instance, BATTERY_TOPIC, mqtt_msg1, strlen(mqtt_msg1), 2, 0);
 }

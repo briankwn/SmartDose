@@ -117,9 +117,11 @@
 #include "iot/http/http_client.h"
 #include "MQTTClient/Wrapper/mqtt.h"
 #include "SerialConsole.h"
+#include "cli.h"
 
 
 volatile char mqtt_msg [64]= "{\"d\":{\"temp\":17}}\"";
+volatile char mqtt_msg1 [64]= "{\"d\":{\"bat_level\":50}}";	
 volatile uint32_t temperature = 1;
 
 uint8_t second_file = 0;
@@ -817,6 +819,7 @@ static void mqtt_callback(struct mqtt_module *module_inst, int type, union mqtt_
 			/* Subscribe chat topic. */
 			mqtt_subscribe(module_inst, TEMPERATURE_TOPIC, 2, SubscribeHandler);
 			mqtt_subscribe(module_inst, LED_TOPIC, 2, SubscribeHandler);
+			mqtt_subscribe(module_inst, BATTERY_TOPIC, 2, SubscribeHandler);
 			/* Enable USART receiving callback. */
 			
 			printf("MQTT Connected\r\n");
@@ -1105,6 +1108,11 @@ int main(void)
 	/* Initialize the BSP. */
 	nm_bsp_init();
 
+	/*Cli init*/
+	cli_init(&mqtt_inst);
+
+
+
 	/*Initialize BUTTON 0 as an external interrupt*/
 	configure_extint_channel();
 	configure_extint_callbacks();
@@ -1196,11 +1204,12 @@ int main(void)
 		if(isPressed)
 		{
 			//Publish updated temperature data
-			mqtt_publish(&mqtt_inst, TEMPERATURE_TOPIC, mqtt_msg, strlen(mqtt_msg), 2, 0);
-			otafu();
+			//mqtt_publish(&mqtt_inst, TEMPERATURE_TOPIC, mqtt_msg, strlen(mqtt_msg), 2, 0);
+			mqtt_publish(&mqtt_inst, BATTERY_TOPIC, mqtt_msg1, strlen(mqtt_msg1), 2, 0);
+			//otafu();
 			isPressed = false;
 		}
-
+		ReadIntoBuffer(); 
 		//Handle MQTT messages
 			if(mqtt_inst.isConnected)
 			mqtt_yield(&mqtt_inst, 100);

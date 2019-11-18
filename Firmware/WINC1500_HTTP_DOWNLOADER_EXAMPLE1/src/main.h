@@ -85,24 +85,25 @@ typedef enum {
 /* Chat MQTT topic. */
 #define TEMPERATURE_TOPIC	"TempData"
 #define LED_TOPIC			"LedData"
+#define BATTERY_TOPIC		"BatteryLevel"
 
 #define LED_TOPIC_LED_OFF	 "false"
 #define LED_TOPIC_LED_ON	 "true"
 
 //Cloud MQTT User
-#define CLOUDMQTT_USER_ID	"rttyobej"
+#define CLOUDMQTT_USER_ID	"suaspvbb"
 
 
 //Cloud MQTT pASSWORD
-#define CLOUDMQTT_USER_PASSWORD	"BrsJBNVoQBl7"
+#define CLOUDMQTT_USER_PASSWORD	"VKqD7VoT-XV0"
 
-#define CLOUDMQTT_PORT		11625
+#define CLOUDMQTT_PORT		 	17222
 
 /*
  * A MQTT broker server which was connected.
  * m2m.eclipse.org is public MQTT broker.
  */
-static const char main_mqtt_broker[] = "m16.cloudmqtt.com";
+static const char main_mqtt_broker[] = "tailor.cloudmqtt.com";
 
 static void otafu(void);
 uint8_t check_crc(void);

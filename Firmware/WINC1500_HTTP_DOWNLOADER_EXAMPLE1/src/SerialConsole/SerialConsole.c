@@ -25,7 +25,7 @@
 * Includes
 ******************************************************************************/
 #include "SerialConsole.h"
-
+#include "cli.h"
 /******************************************************************************
 * Defines
 ******************************************************************************/
@@ -269,7 +269,7 @@ void usart_read_callback(struct usart_module *const usart_module)
 	SerialConsoleWriteString(&latestRx);
 	circular_buf_put(cbufRx, (uint8_t) latestRx); //Add the latest read character into the RX circular Buffer
 	usart_read_buffer_job(&usart_instance, (uint8_t*) &latestRx, 1);	//Order the MCU to keep reading
-	
+	rxBuffRdy = rxBuffRdy + 1;;
 }
 
 

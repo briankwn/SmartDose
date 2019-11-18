@@ -12,6 +12,8 @@ src\ASF\sam0\drivers\pac\pac_sam_d_r_h\pac.c
 
 src\SerialConsole\circular_buffer.c
 
+src\SerialConsole\cli.c
+
 src\SerialConsole\SerialConsole.c
 
 src\ASF\common2\components\memory\sd_mmc\sd_mmc.c
