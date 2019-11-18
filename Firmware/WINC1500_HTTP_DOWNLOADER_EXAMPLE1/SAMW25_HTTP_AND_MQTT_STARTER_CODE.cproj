@@ -1048,6 +1048,12 @@
     <Compile Include="src\SerialConsole\circular_buffer.h">
       <SubType>compile</SubType>
     </Compile>
+    <Compile Include="src\SerialConsole\cli.c">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="src\SerialConsole\cli.h">
+      <SubType>compile</SubType>
+    </Compile>
     <Compile Include="src\SerialConsole\SerialConsole.c">
       <SubType>compile</SubType>
     </Compile>

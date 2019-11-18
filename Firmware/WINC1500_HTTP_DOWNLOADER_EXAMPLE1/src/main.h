@@ -105,7 +105,7 @@ typedef enum {
 static const char main_mqtt_broker[] = "m16.cloudmqtt.com";
 
 static void otafu(void);
-
+uint8_t check_crc(void);
 
 
 #ifdef __cplusplus

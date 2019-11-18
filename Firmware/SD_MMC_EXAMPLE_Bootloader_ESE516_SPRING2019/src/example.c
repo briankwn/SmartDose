@@ -1,3 +1,4 @@
+
 /**
  * \file
  *
@@ -164,7 +165,7 @@ int main(void)
 
 		// OPEN params.csv
 		SerialConsoleWriteString("Opening params.csv\r\n");
-		res = f_open(&params_file, (char const *)params_file_name, FA_READ);
+		res = f_open(&params_file, (char const *)params_file_name, FA_READ | FA_WRITE);
 		if (res != FR_OK) {
 			LogMessage(LOG_INFO_LVL ,"[FAIL: Could not open params file] res %d\r\n", res);
 			goto main_end_of_test;
@@ -179,7 +180,7 @@ int main(void)
 		}
 		LogMessage(LOG_INFO_LVL ,"[Bytes read from params.csv: ] %d\r\n", br);
 		
-		f_close(&params_file);		
+			
 
 		char * flag = strtok(params, ",");
 		char * string_crc_from_file = strtok(NULL, ",");
@@ -202,6 +203,19 @@ int main(void)
 		else if(strcmp("1",flag)==0){ 
 				SerialConsoleWriteString("Update Flag was set: UPDATING FIRMWARE \r\n");
 				if(update_firmware(crc_from_file) == 1){
+					params_file.fptr = 0;
+					res = f_read(&params_file,(char const *)params, 50, &br);
+					if (res != FR_OK) {
+						LogMessage(LOG_INFO_LVL ,"[FAIL: Could not read Parameters File] res %d\r\n", res);
+						goto main_end_of_test;
+					}
+					params_file.fptr = 0;
+					params[0] = "0";
+					res = f_write(&params_file,(char const *)params, 50, &br);
+					if (res != FR_OK) {
+						LogMessage(LOG_INFO_LVL ,"[FAIL: Could not write Parameters File] res %d\r\n", res);
+						goto main_end_of_test;
+					}
 					goto main_end_of_test;
 				}
 
@@ -213,6 +227,7 @@ int main(void)
 		
 		
 main_end_of_test:
+		f_close(&params_file);
 		SerialConsoleWriteString("Please unplug the card.\n\r");
 
 
