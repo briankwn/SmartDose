@@ -757,7 +757,7 @@ void SubscribeHandler(MessageData *msgData)
 	/* Print Topic and message */
 	printf("\r\n %.*s",msgData->topicName->lenstring.len,msgData->topicName->lenstring.data);
 	printf(" >> ");
-	printf("%.*s",msgData->message->payloadlen,(char *)msgData->message->payload);	
+	printf("%.*s \r\n",msgData->message->payloadlen,(char *)msgData->message->payload);	
 
 	//Handle LedData message
 	if(strncmp((char *) msgData->topicName->lenstring.data, LED_TOPIC, msgData->message->payloadlen) == 0)
@@ -771,6 +771,21 @@ void SubscribeHandler(MessageData *msgData)
 			port_pin_set_output_level(LED_0_PIN, LED_0_ACTIVE);
 		}
 	}
+		
+		//Handle OTAFU message
+		if(strncmp((char *) msgData->topicName->lenstring.data, OTAFU_TOPIC, msgData->message->payloadlen) == 0)
+		{
+			if(strncmp((char *)msgData->message->payload, "false", msgData->message->payloadlen) == 0)
+			{
+				printf("OTAFU FALSE \r\n");
+			}
+			else if (strncmp((char *)msgData->message->payload, "true", msgData->message->payloadlen) == 0)
+			{
+				printf("PERFORMING OTAFU \r\n");	
+				otafu();
+			}
+		}
+
 }
 
 
@@ -820,6 +835,7 @@ static void mqtt_callback(struct mqtt_module *module_inst, int type, union mqtt_
 			mqtt_subscribe(module_inst, TEMPERATURE_TOPIC, 2, SubscribeHandler);
 			mqtt_subscribe(module_inst, LED_TOPIC, 2, SubscribeHandler);
 			mqtt_subscribe(module_inst, BATTERY_TOPIC, 2, SubscribeHandler);
+			mqtt_subscribe(module_inst, OTAFU_TOPIC, 2, SubscribeHandler);
 			/* Enable USART receiving callback. */
 			
 			printf("MQTT Connected\r\n");

@@ -86,6 +86,9 @@ typedef enum {
 #define TEMPERATURE_TOPIC	"TempData"
 #define LED_TOPIC			"LedData"
 #define BATTERY_TOPIC		"BatteryLevel"
+#define PILL_REQUEST_TOPIC  "pill_request"
+#define ALARM_TOPIC			"alarm"
+#define OTAFU_TOPIC			"otafu"
 
 #define LED_TOPIC_LED_OFF	 "false"
 #define LED_TOPIC_LED_ON	 "true"

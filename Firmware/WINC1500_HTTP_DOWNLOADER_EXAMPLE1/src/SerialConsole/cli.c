@@ -126,7 +126,9 @@ struct cmdname commandarr[] =
 	{"start_buzzing" , start_buzzing},
 	{"stop_buzzing", stop_buzzing},
 	{"read_ir", read_ir},
-	{"pub_battery", pub_battery}	
+	{"pub_battery", pub_battery},
+	{"request_pill", request_pill},
+	{"sound_alarm", sound_alarm}		
 };
 enum {NUMOFCMDS = sizeof(commandarr)/sizeof(commandarr[0])};
 
@@ -162,6 +164,16 @@ void cli_init(struct mqtt_module *mqtt_inst_ref){
 }
 
 void pub_battery(){
-	volatile char mqtt_msg1 [64]= "{\"d\":{\"bat_level\":50}}";
-	mqtt_publish(&mqtt_instance, BATTERY_TOPIC, mqtt_msg1, strlen(mqtt_msg1), 2, 0);
+	volatile char mqtt_msg[64]= "{\"d\":{\"bat_level\":50}}";
+	mqtt_publish(&mqtt_instance, BATTERY_TOPIC, mqtt_msg, strlen(mqtt_msg), QOS, RETAIN);	// change qos = and retain dynamicall
+}
+
+void request_pill(){
+	volatile char mqtt_msg[64]= "{\"d\":{\"pill_request\":true}}";
+	mqtt_publish(&mqtt_instance, PILL_REQUEST_TOPIC, mqtt_msg, strlen(mqtt_msg), QOS, RETAIN);
+}
+
+void sound_alarm(){
+	volatile char mqtt_msg[64]= "{\"d\":{\"alarm\":true}}";
+	mqtt_publish(&mqtt_instance, ALARM_TOPIC, mqtt_msg, strlen(mqtt_msg), QOS, RETAIN);
 }

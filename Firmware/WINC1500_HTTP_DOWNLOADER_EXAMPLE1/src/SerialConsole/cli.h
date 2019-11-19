@@ -25,7 +25,8 @@ uint8_t rxBuffRdy; //flag for rx buffer being ready   (INCONSISTENTCY)
 
 //uint8_t cmdchar; //character
 uint8_t cmditer; //location in read in command buffer
-
+#define QOS 2
+#define RETAIN 0
 
 char nameofdevice[50]; //device name stored in RAM
 char *inp; //pointer for input variable
@@ -49,7 +50,8 @@ void setDeviceName();
 void getDeviceName();
 void cli_init();
 void pub_battery();
-
+void request_pill();
+void sound_alarm();
 
 
 
