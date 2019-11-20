@@ -89,6 +89,9 @@ typedef enum {
 #define PILL_REQUEST_TOPIC  "pill_request"
 #define ALARM_TOPIC			"alarm"
 #define OTAFU_TOPIC			"otafu"
+#define SCHEDULE_DAY_TOPIC   "SetDateDaily"
+#define SCHEDULE_WEEK_TOPIC  "SetDateWeekly"
+#define AUTHENTICATION_TOPIC  "HashedPass"
 
 #define LED_TOPIC_LED_OFF	 "false"
 #define LED_TOPIC_LED_ON	 "true"

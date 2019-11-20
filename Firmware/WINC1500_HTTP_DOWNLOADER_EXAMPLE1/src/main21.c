@@ -773,18 +773,27 @@ void SubscribeHandler(MessageData *msgData)
 	}
 		
 		//Handle OTAFU message
-		if(strncmp((char *) msgData->topicName->lenstring.data, OTAFU_TOPIC, msgData->message->payloadlen) == 0)
-		{
-			if(strncmp((char *)msgData->message->payload, "false", msgData->message->payloadlen) == 0)
-			{
+	if(strncmp((char *) msgData->topicName->lenstring.data, OTAFU_TOPIC, msgData->message->payloadlen) == 0){
+		if(strncmp((char *)msgData->message->payload, "false", msgData->message->payloadlen) == 0){
 				printf("OTAFU FALSE \r\n");
-			}
-			else if (strncmp((char *)msgData->message->payload, "true", msgData->message->payloadlen) == 0)
-			{
+		}
+		else if (strncmp((char *)msgData->message->payload, "true", msgData->message->payloadlen) == 0){
 				printf("PERFORMING OTAFU \r\n");	
 				otafu();
-			}
 		}
+	}
+	//Handle Set Daily Message	
+	if(strncmp((char *) msgData->topicName->lenstring.data, SCHEDULE_DAY_TOPIC, msgData->message->payloadlen) == 0){
+			printf("I WILL NOW SET SCHEDULE BY DAY \r\n");				
+	}
+	// Handle set Weekly message
+	if(strncmp((char *) msgData->topicName->lenstring.data, SCHEDULE_WEEK_TOPIC, msgData->message->payloadlen) == 0){
+			printf("I WILL NOW SET SCHEDULE BY WEEK \r\n");
+	}
+	
+	if(strncmp((char *) msgData->topicName->lenstring.data, AUTHENTICATION_TOPIC, msgData->message->payloadlen) == 0){
+		printf("I WILL NOW AUTHENTICATE YOU \r\n");
+	}
 
 }
 
@@ -832,10 +841,11 @@ static void mqtt_callback(struct mqtt_module *module_inst, int type, union mqtt_
 	case MQTT_CALLBACK_CONNECTED:
 		if (data->connected.result == MQTT_CONN_RESULT_ACCEPT) {
 			/* Subscribe chat topic. */
-			mqtt_subscribe(module_inst, TEMPERATURE_TOPIC, 2, SubscribeHandler);
-			mqtt_subscribe(module_inst, LED_TOPIC, 2, SubscribeHandler);
 			mqtt_subscribe(module_inst, BATTERY_TOPIC, 2, SubscribeHandler);
 			mqtt_subscribe(module_inst, OTAFU_TOPIC, 2, SubscribeHandler);
+			mqtt_subscribe(module_inst, SCHEDULE_DAY_TOPIC, 2, SubscribeHandler);
+			mqtt_subscribe(module_inst, SCHEDULE_WEEK_TOPIC, 2, SubscribeHandler);
+			mqtt_subscribe(module_inst, AUTHENTICATION_TOPIC, 2, SubscribeHandler);
 			/* Enable USART receiving callback. */
 			
 			printf("MQTT Connected\r\n");
@@ -972,7 +982,8 @@ static void otafu(void){
 	}
 	printf("otafu: done.\r\n");
 	uint8_t result_crc= check_crc();
-	
+	//char mqtt_msg1[]="false";
+	//mqtt_publish(&mqtt_inst, OTAFU_TOPIC, mqtt_msg1, strlen(mqtt_msg1), 2, 0);
 	socketDeinit();
 	delay_s(3); //let the print buffer catch up before we reset
 	system_reset();

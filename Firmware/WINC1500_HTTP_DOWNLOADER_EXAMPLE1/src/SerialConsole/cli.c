@@ -45,14 +45,20 @@ void ReadIntoBuffer(){
 void help(){
 	SerialConsoleWriteString("\r\n");
 	SerialConsoleWriteString(
-	"	help                        Prints this message\r\n\
+	"help                        Prints this message\r\n\
 	ver_bl                      Prints the bootloader firmware version\r\n\
 	ver_app                     Prints the application code firmware version\r\n\
 	mac                         Prints the mac address of device\r\n\
 	ip                          Prints the ip  address of device\r\n\
 	devName                     Prints the name of the developer\r\n\
 	setDeviceName <string name> Sets the name of the device to the given string\r\n\
-	getDeviceName               gets the name of the device\r\n");
+	getDeviceName               gets the name of the device\r\n\
+	start_buzzing               Turns on Buzzer\r\n\
+	stop_buzzing                Turns off Buzzer\r\n\
+	read_ir						Reads Value from IR Sensor\r\n\
+	pub_battery                 Publish Dummy value to the Dashboard\r\n\
+	request_pill                Sends Request for pill to the cloud\r\n\
+	sound_alarm                 Sounds alarm for pill miss\r\n  ");
 }
 //static strings are just in there to make the assignment complete. cleaning up when I get enough time
 char outstring[30];
